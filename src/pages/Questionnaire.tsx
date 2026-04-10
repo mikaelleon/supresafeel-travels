@@ -2,44 +2,67 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 
+const ageOptions = ["Below 18", "18-24", "25-34", "35-44", "45 and above"];
+const genderOptions = ["Male", "Female", "Prefer not to say"];
+const travelFrequency = ["Once a year", "2-3 times a year", "More than 3 times a year"];
+
 const moodOptions = [
-  { emoji: "😌", label: "Stress Relief" },
-  { emoji: "🌊", label: "Relaxed & Peaceful" },
-  { emoji: "❤️", label: "Romantic" },
-  { emoji: "🧗", label: "Adventurous" },
-  { emoji: "👨‍👩‍👧", label: "Bonding with Loved Ones" },
-  { emoji: "🎒", label: "Solo & Reflective" },
+  "Happy", "Sad", "Excited", "Inspired", "Peaceful", "Adventurous", "Relaxed", "Angry",
 ];
-
+const travelTypes = ["Relaxation", "Adventure", "Cultural", "Romantic trips", "Family trips", "Solo travel"];
 const budgetOptions = [
-  { emoji: "💸", label: "Budget", desc: "Under ₱3,000" },
-  { emoji: "💰", label: "Standard", desc: "₱3,000 - ₱7,000" },
-  { emoji: "💎", label: "Premium", desc: "₱7,000 - ₱15,000" },
-  { emoji: "🌟", label: "Luxury", desc: "₱15,000 and above" },
+  { label: "Below ₱5,000", value: "below5000" },
+  { label: "₱5,000 - ₱10,000", value: "5000-10000" },
+  { label: "₱10,000 - ₱20,000", value: "10000-20000" },
+  { label: "Above ₱20,000", value: "above20000" },
 ];
-
-const destTypes = ["Beach", "Mountains", "City", "Countryside", "Cultural/Heritage", "Surprise Me"];
-const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const groupTypes = [
-  { label: "Solo", emoji: "🧑" },
-  { label: "Couple", emoji: "💑" },
-  { label: "Friends (Barkada)", emoji: "👫" },
-  { label: "Family", emoji: "👨‍👩‍👧‍👦" },
+const featureOptions = [
+  "Personalized itinerary", "Mood-based destination suggestions", "Budget-friendly options",
+  "Flexible schedule", "24/7 assistance",
 ];
+const destinationTypeOptions = [
+  "Beach destinations", "Mountains", "Cities", "Countryside/Rural areas", "Historical/Cultural sites",
+];
+const destinationScopeOptions = [
+  "Local (within your province)", "Domestic (within the Philippines)", "International",
+];
+const activityOptions = [
+  "Swimming / Beach activities", "Hiking / Trekking", "Food trips", "Shopping",
+  "Sightseeing", "Cultural experiences", "Nightlife",
+];
+const travelDistanceOptions = [
+  "1–3 hours travel time", "4–6 hours", "1 day travel", "Willing to travel long distances",
+];
+const travelWithOptions = ["Alone", "Friends", "Family", "Partner"];
+const openToNewOptions = ["Yes", "Maybe", "No"];
+const transportOptions = ["Land (bus, car)", "Airplane", "Boat/ferry", "Mix of all"];
+const tripLengthOptions = ["Day trip", "2–3 days", "4–7 days", "More than a week"];
+const destinationVibeOptions = ["Trending/popular", "Balanced (popular + peaceful)", "Hidden/undiscovered"];
 
 interface FormData {
   name: string;
-  email: string;
-  contact: string;
-  mood: string;
-  destinationType: string;
-  travelMonth: string;
-  numberOfDays: number;
-  groupType: string;
+  age: string;
+  gender: string;
+  occupation: string;
+  travelFrequency: string;
+  moods: string[];
+  moodOther: string;
+  travelTypes: string[];
   budget: string;
-  additionalNotes: string;
-  consent: boolean;
+  heardOfEmotionTravel: string;
+  expectedFeatures: string[];
+  destinationTypes: string[];
+  destinationScope: string[];
+  activities: string[];
+  travelDistance: string;
+  travelWith: string[];
+  openToNew: string;
+  transport: string[];
+  tripLength: string;
+  destinationVibe: string;
 }
+
+const totalSteps = 6;
 
 const Questionnaire = () => {
   const [step, setStep] = useState(1);
@@ -47,24 +70,33 @@ const Questionnaire = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormData>({
-    name: "", email: "", contact: "", mood: "", destinationType: "",
-    travelMonth: "", numberOfDays: 3, groupType: "", budget: "",
-    additionalNotes: "", consent: false,
+    name: "", age: "", gender: "", occupation: "", travelFrequency: "",
+    moods: [], moodOther: "", travelTypes: [], budget: "",
+    heardOfEmotionTravel: "", expectedFeatures: [], destinationTypes: [],
+    destinationScope: [], activities: [], travelDistance: "",
+    travelWith: [], openToNew: "", transport: [], tripLength: "", destinationVibe: "",
   });
 
-  const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
 
-  const update = (field: keyof FormData, value: string | number | boolean) => {
+  const updateText = (field: keyof FormData, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
+  const toggleArray = (field: keyof FormData, value: string) => {
+    setForm(prev => {
+      const arr = prev[field] as string[];
+      return { ...prev, [field]: arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value] };
+    });
+  };
+
   const canNext = () => {
-    if (step === 1) return form.name.trim() !== "" && form.email.trim() !== "";
-    if (step === 2) return form.mood !== "";
-    if (step === 3) return form.destinationType !== "" && form.travelMonth !== "" && form.groupType !== "";
-    if (step === 4) return form.budget !== "";
-    if (step === 5) return form.consent;
+    if (step === 1) return form.name.trim() !== "" && form.age !== "" && form.gender !== "";
+    if (step === 2) return form.travelFrequency !== "" && form.moods.length > 0;
+    if (step === 3) return form.travelTypes.length > 0 && form.budget !== "";
+    if (step === 4) return form.heardOfEmotionTravel !== "" && form.expectedFeatures.length > 0;
+    if (step === 5) return form.destinationTypes.length > 0 && form.destinationScope.length > 0 && form.activities.length > 0;
+    if (step === 6) return form.travelDistance !== "" && form.travelWith.length > 0 && form.openToNew !== "" && form.transport.length > 0 && form.tripLength !== "" && form.destinationVibe !== "";
     return true;
   };
 
@@ -75,13 +107,7 @@ const Questionnaire = () => {
       const res = await fetch("YOUR_APPS_SCRIPT_URL_HERE", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name, email: form.email, contact: form.contact,
-          mood: form.mood, destinationType: form.destinationType,
-          travelMonth: form.travelMonth, numberOfDays: form.numberOfDays,
-          groupType: form.groupType, budget: form.budget,
-          additionalNotes: form.additionalNotes,
-        }),
+        body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error("Failed");
     } catch {
@@ -91,15 +117,41 @@ const Questionnaire = () => {
     setSubmitted(true);
   };
 
+  // Reusable UI helpers
+  const RadioCards = ({ options, value, onChange }: { options: string[]; value: string; onChange: (v: string) => void }) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {options.map(opt => (
+        <button key={opt} type="button" onClick={() => onChange(opt)}
+          className={`rounded-xl px-4 py-3 border-2 text-sm font-medium text-left transition-all ${value === opt ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"}`}>
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+
+  const CheckboxCards = ({ options, selected, onToggle }: { options: string[]; selected: string[]; onToggle: (v: string) => void }) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {options.map(opt => (
+        <button key={opt} type="button" onClick={() => onToggle(opt)}
+          className={`rounded-xl px-4 py-3 border-2 text-sm font-medium text-left transition-all flex items-center gap-3 ${selected.includes(opt) ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"}`}>
+          <span className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 text-xs ${selected.includes(opt) ? "border-primary bg-primary text-primary-foreground" : "border-muted-foreground/40"}`}>
+            {selected.includes(opt) && "✓"}
+          </span>
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+
   if (submitted) {
     const firstName = form.name.split(" ")[0];
     return (
       <div className="page-fade-in pt-20 min-h-screen flex items-center justify-center px-4">
         <div className="max-w-md text-center">
           <span className="text-6xl block mb-4">💛</span>
-          <h1 className="font-heading text-3xl font-bold mb-4">Your emotion has been received!</h1>
+          <h1 className="font-heading text-3xl font-bold mb-4">Your response has been received!</h1>
           <p className="text-muted-foreground mb-8">
-            Thank you, {firstName}! We'll craft your personalized itinerary and send it to {form.email} within 24–48 hours. In the meantime, follow us on Facebook and TikTok for travel inspo!
+            Thank you, {firstName}! Your answers will help us understand how emotions shape travel. We appreciate your time!
           </p>
           <Link to="/" className="inline-block px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold">
             Back to Home
@@ -112,135 +164,136 @@ const Questionnaire = () => {
   return (
     <div className="page-fade-in pt-20 min-h-screen">
       <div className="container mx-auto max-w-2xl px-4 py-12">
-        <h1 className="font-heading text-3xl md:text-4xl font-bold text-center mb-2">Emotion Quiz</h1>
+        <h1 className="font-heading text-3xl md:text-4xl font-bold text-center mb-2">Emotion Travel Survey</h1>
         <p className="text-center text-muted-foreground mb-8">Step {step} of {totalSteps}</p>
         <Progress value={progress} className="mb-10 h-2" />
 
         {error && (
-          <div className="bg-accent/10 border border-accent text-accent rounded-xl p-4 mb-6 text-sm">
-            {error}
-          </div>
+          <div className="bg-accent/10 border border-accent text-accent rounded-xl p-4 mb-6 text-sm">{error}</div>
         )}
 
         <div className="bg-card rounded-2xl p-6 md:p-8 shadow-md border border-border min-h-[300px]">
-          {/* Step 1: Personal Info */}
+          {/* Step 1: Demographics */}
           {step === 1 && (
             <div className="space-y-5">
-              <h2 className="font-heading text-xl font-semibold mb-4">Personal Information</h2>
+              <h2 className="font-heading text-xl font-semibold mb-4">About You</h2>
               <div>
-                <label className="block text-sm font-medium mb-1">Full Name *</label>
-                <input type="text" value={form.name} onChange={e => update("name", e.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="Juan dela Cruz" />
+                <label className="block text-sm font-medium mb-1">Name *</label>
+                <input type="text" value={form.name} onChange={e => updateText("name", e.target.value)}
+                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="Your full name" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Email Address *</label>
-                <input type="email" value={form.email} onChange={e => update("email", e.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="juan@email.com" />
+                <label className="block text-sm font-medium mb-2">Age *</label>
+                <RadioCards options={ageOptions} value={form.age} onChange={v => updateText("age", v)} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Contact Number <span className="text-muted-foreground">(optional)</span></label>
-                <input type="text" value={form.contact} onChange={e => update("contact", e.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="0912-345-6789" />
+                <label className="block text-sm font-medium mb-2">Gender *</label>
+                <RadioCards options={genderOptions} value={form.gender} onChange={v => updateText("gender", v)} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Occupation</label>
+                <input type="text" value={form.occupation} onChange={e => updateText("occupation", e.target.value)}
+                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="e.g. Student, Nurse, Freelancer" />
               </div>
             </div>
           )}
 
-          {/* Step 2: Mood */}
+          {/* Step 2: Travel frequency + Mood */}
           {step === 2 && (
-            <div>
-              <h2 className="font-heading text-xl font-semibold mb-2">How do you want to FEEL on this trip?</h2>
-              <p className="text-sm text-muted-foreground mb-6">Select one mood</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {moodOptions.map((m) => (
-                  <button key={m.label} onClick={() => update("mood", m.label)}
-                    className={`rounded-xl p-4 border-2 text-center transition-all ${
-                      form.mood === m.label ? "border-primary bg-primary/10 shadow-md" : "border-border hover:border-primary/50"
-                    }`}>
-                    <span className="text-3xl block mb-2">{m.emoji}</span>
-                    <span className="text-xs font-semibold">{m.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Travel Details */}
-          {step === 3 && (
-            <div className="space-y-5">
-              <h2 className="font-heading text-xl font-semibold mb-4">Travel Details</h2>
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-1">Preferred Destination Type</label>
-                <select value={form.destinationType} onChange={e => update("destinationType", e.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                  <option value="">Select...</option>
-                  {destTypes.map(d => <option key={d} value={d}>{d}</option>)}
-                </select>
+                <h2 className="font-heading text-xl font-semibold mb-2">How often do you travel?</h2>
+                <RadioCards options={travelFrequency} value={form.travelFrequency} onChange={v => updateText("travelFrequency", v)} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Travel Month</label>
-                <select value={form.travelMonth} onChange={e => update("travelMonth", e.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                  <option value="">Select...</option>
-                  {months.map(m => <option key={m} value={m}>{m}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Number of Days</label>
-                <input type="number" min={1} max={14} value={form.numberOfDays}
-                  onChange={e => update("numberOfDays", parseInt(e.target.value) || 1)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Travel Group</label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {groupTypes.map(g => (
-                    <button key={g.label} onClick={() => update("groupType", g.label)}
-                      className={`rounded-xl p-3 border-2 text-center transition-all text-sm ${
-                        form.groupType === g.label ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
-                      }`}>
-                      <span className="text-xl block mb-1">{g.emoji}</span>
-                      <span className="text-xs font-medium">{g.label}</span>
-                    </button>
-                  ))}
+                <h2 className="font-heading text-xl font-semibold mb-2">What is your mood/feeling/emotions?</h2>
+                <p className="text-sm text-muted-foreground mb-3">Check all that apply</p>
+                <CheckboxCards options={moodOptions} selected={form.moods} onToggle={v => toggleArray("moods", v)} />
+                <div className="mt-3">
+                  <input type="text" value={form.moodOther} onChange={e => updateText("moodOther", e.target.value)}
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="Others (please specify)" />
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 4: Budget */}
-          {step === 4 && (
-            <div>
-              <h2 className="font-heading text-xl font-semibold mb-2">What's your travel budget?</h2>
-              <p className="text-sm text-muted-foreground mb-6">Select your range</p>
-              <div className="grid grid-cols-2 gap-4">
-                {budgetOptions.map(b => (
-                  <button key={b.label} onClick={() => update("budget", b.label)}
-                    className={`rounded-xl p-5 border-2 text-center transition-all ${
-                      form.budget === b.label ? "border-primary bg-primary/10 shadow-md" : "border-border hover:border-primary/50"
-                    }`}>
-                    <span className="text-3xl block mb-2">{b.emoji}</span>
-                    <span className="text-sm font-semibold block">{b.label}</span>
-                    <span className="text-xs text-muted-foreground">{b.desc}</span>
-                  </button>
-                ))}
+          {/* Step 3: Travel type + Budget */}
+          {step === 3 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">What type of travel do you usually prefer?</h2>
+                <p className="text-sm text-muted-foreground mb-3">Check all that apply</p>
+                <CheckboxCards options={travelTypes} selected={form.travelTypes} onToggle={v => toggleArray("travelTypes", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">What is your travel budget?</h2>
+                <RadioCards options={budgetOptions.map(b => b.label)} value={form.budget} onChange={v => updateText("budget", v)} />
               </div>
             </div>
           )}
 
-          {/* Step 5: Notes */}
+          {/* Step 4: Emotion-based travel awareness + Features */}
+          {step === 4 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Have you ever heard of emotion-based travel planning?</h2>
+                <RadioCards options={["Yes", "No"]} value={form.heardOfEmotionTravel} onChange={v => updateText("heardOfEmotionTravel", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">What features would you expect from an emotion-based travel service?</h2>
+                <p className="text-sm text-muted-foreground mb-3">Check all that apply</p>
+                <CheckboxCards options={featureOptions} selected={form.expectedFeatures} onToggle={v => toggleArray("expectedFeatures", v)} />
+              </div>
+            </div>
+          )}
+
+          {/* Step 5: Destinations + Activities */}
           {step === 5 && (
-            <div className="space-y-5">
-              <h2 className="font-heading text-xl font-semibold mb-4">Anything else?</h2>
-              <textarea value={form.additionalNotes} onChange={e => update("additionalNotes", e.target.value)}
-                rows={4} placeholder="Dietary restrictions, mobility concerns, special occasions, specific places you want to visit..."
-                className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input type="checkbox" checked={form.consent} onChange={e => update("consent", e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded border-input accent-primary" />
-                <span className="text-sm text-muted-foreground">
-                  I agree to share my travel preferences with SurpreSaFeel Travels for itinerary planning purposes.
-                </span>
-              </label>
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">What type of destinations are you most interested in?</h2>
+                <p className="text-sm text-muted-foreground mb-3">Check all that apply</p>
+                <CheckboxCards options={destinationTypeOptions} selected={form.destinationTypes} onToggle={v => toggleArray("destinationTypes", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Which destinations do you prefer?</h2>
+                <CheckboxCards options={destinationScopeOptions} selected={form.destinationScope} onToggle={v => toggleArray("destinationScope", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">What activities do you want included in your trip?</h2>
+                <p className="text-sm text-muted-foreground mb-3">Check all that apply</p>
+                <CheckboxCards options={activityOptions} selected={form.activities} onToggle={v => toggleArray("activities", v)} />
+              </div>
+            </div>
+          )}
+
+          {/* Step 6: Logistics */}
+          {step === 6 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">How far are you willing to travel?</h2>
+                <RadioCards options={travelDistanceOptions} value={form.travelDistance} onChange={v => updateText("travelDistance", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Who do you usually travel with?</h2>
+                <CheckboxCards options={travelWithOptions} selected={form.travelWith} onToggle={v => toggleArray("travelWith", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Are you open to trying new or less popular destinations?</h2>
+                <RadioCards options={openToNewOptions} value={form.openToNew} onChange={v => updateText("openToNew", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">What type of transportation do you prefer?</h2>
+                <CheckboxCards options={transportOptions} selected={form.transport} onToggle={v => toggleArray("transport", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">How long do you prefer your trips?</h2>
+                <RadioCards options={tripLengthOptions} value={form.tripLength} onChange={v => updateText("tripLength", v)} />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Would you prefer a destination that is:</h2>
+                <RadioCards options={destinationVibeOptions} value={form.destinationVibe} onChange={v => updateText("destinationVibe", v)} />
+              </div>
             </div>
           )}
         </div>
