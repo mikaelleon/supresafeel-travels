@@ -11,6 +11,7 @@
  *    or let the first POST create headers if row 1 is empty.
  *
  * The React app POSTs JSON matching Questionnaire.tsx FormData + consultationRequested.
+ * Body may arrive as Content-Type text/plain (CORS-safe); postData.contents is still JSON text.
  */
 
 const SPREADSHEET_ID = "PASTE_YOUR_SPREADSHEET_ID_HERE";

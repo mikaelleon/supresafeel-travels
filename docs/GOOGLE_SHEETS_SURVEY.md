@@ -166,11 +166,15 @@ If this variable is set, it **replaces** the default URL in code.
 
 ## Step 6: CORS and POST behavior
 
-Apps Script Web Apps respond to **POST** from browsers. If you see CORS errors:
+Apps Script Web Apps do **not** handle **preflight** (`OPTIONS`) the way browsers expect when you send `Content-Type: application/json`. The browser then blocks the request with a CORS error before `doPost` runs.
 
-- Ensure deployment is **Web app** (not only API executable).
-- Return JSON with `ContentService` and `MimeType.JSON` as in the example.
-- Some teams use `no-cors` mode—avoid that; prefer standard JSON POST and correct deployment.
+This project’s frontend posts the same JSON string with **`Content-Type: text/plain;charset=utf-8`**, which is a **simple request** (no preflight). `doPost` still reads `e.postData.contents` and `JSON.parse` works unchanged.
+
+Also check:
+
+- Deployment type is **Web app** (not only API executable).
+- Response body is JSON from `ContentService` with `MimeType.JSON` as in the example.
+- Do **not** use `fetch` `mode: "no-cors"` for submit—you cannot read `{ ok: true }` from an opaque response.
 
 ---
 

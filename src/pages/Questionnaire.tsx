@@ -136,9 +136,10 @@ const Questionnaire = () => {
           : "no",
       };
       const scriptUrl = (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim() || DEFAULT_SURVEY_GOOGLE_SCRIPT_URL);
+      // text/plain avoids CORS preflight; Apps Script still receives JSON in postData.contents
       const res = await fetch(scriptUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
       });
       const raw = await res.text();
