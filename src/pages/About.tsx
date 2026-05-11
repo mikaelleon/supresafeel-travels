@@ -1,13 +1,13 @@
-import { Heart, Fingerprint, Shield } from "lucide-react";
+import { Eye, Heart, Fingerprint, Shield, Target } from "lucide-react";
 
-const team = [
-  { name: "Rieza F. Husmillo", role: "Owner / Founder" },
-  { name: "John Jovenn R. Matibag", role: "Operations" },
-  { name: "Jhasmine D. Maralit", role: "Travel Planner" },
-  { name: "Zyna Daisyrey A. Mecolita", role: "Marketing Manager" },
-  { name: "Hanna Rose D. Perez", role: "Customer Support" },
-  { name: "Richmoon A. Sandro", role: "Finance & Admin" },
-  { name: "Sarah Faye S. Selmo", role: "Creative Strategist" },
+const team: { name: string; role: string; photo: string | null }[] = [
+  { name: "Rieza F. Husmillo", role: "Owner / Founder", photo: "/members/husmillo.jpg" },
+  { name: "John Jovenn R. Matibag", role: "Operations", photo: "/members/matibag.jpg" },
+  { name: "Jhasmine D. Maralit", role: "Travel Planner", photo: "/members/maralit.jpg" },
+  { name: "Zyna Daisyrey A. Mecolita", role: "Marketing Manager", photo: "/members/mecolita.jpg" },
+  { name: "Hanna Rose D. Perez", role: "Customer Support", photo: "/members/perez.jpg" },
+  { name: "Richmoon A. Sandro", role: "Finance & Admin", photo: "/members/sandro.jpg" },
+  { name: "Sarah Faye S. Selmo", role: "Creative Strategist", photo: null },
 ];
 
 const values = [
@@ -32,17 +32,53 @@ const About = () => {
         </div>
       </section>
 
+      {/* Mission */}
+      <section className="py-16 px-4 bg-muted/50 border-y border-border/60">
+        <div className="container mx-auto max-w-3xl text-center">
+          <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-5">
+            <Target className="w-7 h-7 text-primary" aria-hidden />
+          </div>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">Mission</h2>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            Help Filipino travelers plan trips rooted in emotional clarity—through thoughtful questions, honest recommendations, and itineraries that respect budget, time, and how they want to feel when they return home.
+          </p>
+        </div>
+      </section>
+
+      {/* Vision */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-3xl text-center">
+          <div className="w-14 h-14 rounded-full bg-secondary/15 flex items-center justify-center mx-auto mb-5">
+            <Eye className="w-7 h-7 text-secondary" aria-hidden />
+          </div>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">Vision</h2>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            Become the most trusted emotion-first travel brand in the Philippines—where feeling leads, planning follows, and every journey reflects the traveler&apos;s real life, not a generic template.
+          </p>
+        </div>
+      </section>
+
       {/* Team */}
       <section className="py-20 px-4 bg-muted/50">
         <div className="container mx-auto max-w-5xl">
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-center mb-12">Meet the Team</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {team.map((m, i) => (
-              <div key={i} className="bg-card rounded-2xl p-6 text-center shadow-md border border-border">
-                <div className="w-16 h-16 rounded-full bg-primary/20 mx-auto mb-3 flex items-center justify-center text-2xl font-heading font-bold text-primary">
-                  {m.name.charAt(0)}
-                </div>
-                <h3 className="font-heading text-sm font-semibold">{m.name}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {team.map(m => (
+              <div key={m.name} className="bg-card rounded-2xl p-6 text-center shadow-md border border-border">
+                {m.photo ? (
+                  <img
+                    src={m.photo}
+                    alt={m.name}
+                    className="w-28 h-28 rounded-full object-cover mx-auto mb-4 border-2 border-primary/20 shadow-sm"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div className="w-28 h-28 rounded-full bg-primary/20 mx-auto mb-4 flex items-center justify-center text-2xl font-heading font-bold text-primary border-2 border-primary/25">
+                    {m.name.charAt(0)}
+                  </div>
+                )}
+                <h3 className="font-heading text-sm font-semibold leading-snug">{m.name}</h3>
                 <p className="text-xs text-muted-foreground mt-1">{m.role}</p>
               </div>
             ))}
