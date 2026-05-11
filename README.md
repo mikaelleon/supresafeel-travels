@@ -13,6 +13,7 @@ Emotion-first travel planning website for the Philippines: marketing pages, serv
 - [Scripts](#scripts)
 - [Project structure](#project-structure)
 - [Build and deploy](#build-and-deploy)
+  - [Cloudflare Pages (important)](#cloudflare-pages-important)
 - [Testing](#testing)
 
 ## Features
@@ -90,8 +91,21 @@ Survey submissions are documented end-to-end in **`docs/GOOGLE_SHEETS_SURVEY.md`
 
 1. Run `pnpm run build`.
 2. Upload or connect the **`dist/`** output to any static host (Netlify, Vercel, Cloudflare Pages, S3 + CloudFront, etc.).
-3. Configure the host for **SPA fallback** (all non-file routes → `index.html`) so React Router works.
+3. Configure the host for **SPA fallback** (all non-file routes → `index.html`) so React Router works. This repo includes **`public/_redirects`** for Cloudflare Pages; Vite copies it into `dist/`.
 4. Set `VITE_GOOGLE_APPS_SCRIPT_URL` in the host environment if you use a non-default Apps Script deployment.
+
+### Cloudflare Pages (important)
+
+Use the **React (Vite)** preset or set manually:
+
+| Setting | Correct value | Wrong value (breaks the site) |
+|--------|----------------|-------------------------------|
+| Build command | `pnpm run build` or `npm run build` | Blank or `exit 0` |
+| Build output directory | **`dist`** | `public`, `/`, or repo root |
+
+If the build output directory is not **`dist`**, Pages serves the repo root `index.html`, which loads **`/src/main.tsx`**. The CDN serves `.tsx` as **`application/octet-stream`**, so the console shows: *Expected a JavaScript module…* and the page stays blank.
+
+After fixing settings, trigger a new deployment. Optionally set **`NODE_VERSION`** to `20` under Environment variables.
 
 ## Testing
 
