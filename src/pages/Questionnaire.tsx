@@ -49,6 +49,8 @@ interface FormData {
   moodOther: string;
   travelTypes: string[];
   budget: string;
+  consultationRequested: "" | "yes" | "no";
+  additionalNotes: string;
   heardOfEmotionTravel: string;
   expectedFeatures: string[];
   destinationTypes: string[];
@@ -62,7 +64,18 @@ interface FormData {
   destinationVibe: string;
 }
 
-const totalSteps = 6;
+const consultationCardOptions: { value: "yes" | "no"; label: string }[] = [
+  {
+    value: "yes",
+    label: "✅ Yes, I would like to include a mental health consultation (with additional fee)",
+  },
+  {
+    value: "no",
+    label: "❌ No, I will proceed with the standard emotional assessment only",
+  },
+];
+
+const totalSteps = 9;
 
 const Questionnaire = () => {
   const [step, setStep] = useState(1);
@@ -72,6 +85,7 @@ const Questionnaire = () => {
   const [form, setForm] = useState<FormData>({
     name: "", age: "", gender: "", occupation: "", travelFrequency: "",
     moods: [], moodOther: "", travelTypes: [], budget: "",
+    consultationRequested: "", additionalNotes: "",
     heardOfEmotionTravel: "", expectedFeatures: [], destinationTypes: [],
     destinationScope: [], activities: [], travelDistance: "",
     travelWith: [], openToNew: "", transport: [], tripLength: "", destinationVibe: "",
@@ -93,10 +107,13 @@ const Questionnaire = () => {
   const canNext = () => {
     if (step === 1) return form.name.trim() !== "" && form.age !== "" && form.gender !== "";
     if (step === 2) return form.travelFrequency !== "" && form.moods.length > 0;
-    if (step === 3) return form.travelTypes.length > 0 && form.budget !== "";
-    if (step === 4) return form.heardOfEmotionTravel !== "" && form.expectedFeatures.length > 0;
-    if (step === 5) return form.destinationTypes.length > 0 && form.destinationScope.length > 0 && form.activities.length > 0;
-    if (step === 6) return form.travelDistance !== "" && form.travelWith.length > 0 && form.openToNew !== "" && form.transport.length > 0 && form.tripLength !== "" && form.destinationVibe !== "";
+    if (step === 3) return form.travelTypes.length > 0;
+    if (step === 4) return form.budget !== "";
+    if (step === 5) return form.consultationRequested === "yes" || form.consultationRequested === "no";
+    if (step === 6) return true;
+    if (step === 7) return form.heardOfEmotionTravel !== "" && form.expectedFeatures.length > 0;
+    if (step === 8) return form.destinationTypes.length > 0 && form.destinationScope.length > 0 && form.activities.length > 0;
+    if (step === 9) return form.travelDistance !== "" && form.travelWith.length > 0 && form.openToNew !== "" && form.transport.length > 0 && form.tripLength !== "" && form.destinationVibe !== "";
     return true;
   };
 
@@ -104,10 +121,16 @@ const Questionnaire = () => {
     setSubmitting(true);
     setError("");
     try {
+      const payload = {
+        ...form,
+        consultationRequested: form.consultationRequested === "yes" || form.consultationRequested === "no"
+          ? form.consultationRequested
+          : "no",
+      };
       const res = await fetch("YOUR_APPS_SCRIPT_URL_HERE", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed");
     } catch {
@@ -124,6 +147,31 @@ const Questionnaire = () => {
         <button key={opt} type="button" onClick={() => onChange(opt)}
           className={`rounded-xl px-4 py-3 border-2 text-sm font-medium text-left transition-all ${value === opt ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"}`}>
           {opt}
+        </button>
+      ))}
+    </div>
+  );
+
+  const LargeChoiceCards = ({
+    options,
+    value,
+    onChange,
+  }: {
+    options: { value: "yes" | "no"; label: string }[];
+    value: "" | "yes" | "no";
+    onChange: (v: "yes" | "no") => void;
+  }) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {options.map(opt => (
+        <button
+          key={opt.value}
+          type="button"
+          onClick={() => onChange(opt.value)}
+          className={`rounded-xl px-4 py-5 border-2 text-sm font-medium text-left transition-all min-h-[5.5rem] flex items-center ${
+            value === opt.value ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"
+          }`}
+        >
+          {opt.label}
         </button>
       ))}
     </div>
@@ -217,7 +265,7 @@ const Questionnaire = () => {
             </div>
           )}
 
-          {/* Step 3: Travel type + Budget */}
+          {/* Step 3: Travel type */}
           {step === 3 && (
             <div className="space-y-6">
               <div>
@@ -225,6 +273,12 @@ const Questionnaire = () => {
                 <p className="text-sm text-muted-foreground mb-3">Check all that apply</p>
                 <CheckboxCards options={travelTypes} selected={form.travelTypes} onToggle={v => toggleArray("travelTypes", v)} />
               </div>
+            </div>
+          )}
+
+          {/* Step 4: Budget */}
+          {step === 4 && (
+            <div className="space-y-6">
               <div>
                 <h2 className="font-heading text-xl font-semibold mb-2">What is your travel budget?</h2>
                 <RadioCards options={budgetOptions.map(b => b.label)} value={form.budget} onChange={v => updateText("budget", v)} />
@@ -232,8 +286,47 @@ const Questionnaire = () => {
             </div>
           )}
 
-          {/* Step 4: Emotion-based travel awareness + Features */}
-          {step === 4 && (
+          {/* Step 5: Optional consultation add-on */}
+          {step === 5 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Would you like to include a consultation?</h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  We offer an optional session with a licensed mental health professional to help identify the emotional needs behind your ideal travel experience. This service comes with an additional fee.
+                </p>
+                <LargeChoiceCards
+                  options={consultationCardOptions}
+                  value={form.consultationRequested}
+                  onChange={v => setForm(prev => ({ ...prev, consultationRequested: v }))}
+                />
+                <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+                  Note: Our team will reach out to you with consultation details and pricing after your form submission.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Step 6: Additional notes */}
+          {step === 6 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="font-heading text-xl font-semibold mb-2">Additional notes</h2>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Anything else you would like us to know? (optional)
+                </p>
+                <textarea
+                  value={form.additionalNotes}
+                  onChange={e => updateText("additionalNotes", e.target.value)}
+                  rows={6}
+                  className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[140px]"
+                  placeholder="Share preferences, accessibility needs, special occasions, or questions for our team."
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Step 7: Emotion-based travel awareness + Features */}
+          {step === 7 && (
             <div className="space-y-6">
               <div>
                 <h2 className="font-heading text-xl font-semibold mb-2">Have you ever heard of emotion-based travel planning?</h2>
@@ -247,8 +340,8 @@ const Questionnaire = () => {
             </div>
           )}
 
-          {/* Step 5: Destinations + Activities */}
-          {step === 5 && (
+          {/* Step 8: Destinations + Activities */}
+          {step === 8 && (
             <div className="space-y-6">
               <div>
                 <h2 className="font-heading text-xl font-semibold mb-2">What type of destinations are you most interested in?</h2>
@@ -267,8 +360,8 @@ const Questionnaire = () => {
             </div>
           )}
 
-          {/* Step 6: Logistics */}
-          {step === 6 && (
+          {/* Step 9: Logistics */}
+          {step === 9 && (
             <div className="space-y-6">
               <div>
                 <h2 className="font-heading text-xl font-semibold mb-2">How far are you willing to travel?</h2>
