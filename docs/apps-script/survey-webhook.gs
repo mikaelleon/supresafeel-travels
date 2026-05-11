@@ -14,7 +14,7 @@
  * Body: JSON in postData.contents, or CORS-safe form field payload (urlencoded) from the website.
  */
 
-const SPREADSHEET_ID = "PASTE_YOUR_SPREADSHEET_ID_HERE";
+const SPREADSHEET_ID = "1N7b8rl8t_P3ogEbFJzf5oA1-tInA_yuoor7FO1ZENW8";
 
 /** Tab name; leave null or "" to use the first sheet. */
 const SHEET_NAME = "Responses";
