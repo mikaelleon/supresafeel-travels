@@ -78,6 +78,10 @@ const consultationCardOptions: { value: "yes" | "no"; label: string; Icon: Lucid
   },
 ];
 
+/** Default production Apps Script Web App (override with VITE_GOOGLE_APPS_SCRIPT_URL). */
+const DEFAULT_SURVEY_GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbw9-vXr7dEyxoDo4vXtGq8fdblov71rTHzbMpZBhyMhhNc3yAc5jCOpYydsMQXsFeY/exec";
+
 const totalSteps = 9;
 
 const Questionnaire = () => {
@@ -130,17 +134,13 @@ const Questionnaire = () => {
           ? form.consultationRequested
           : "no",
       };
-      const scriptUrl = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim();
-      if (scriptUrl) {
-        const res = await fetch(scriptUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) throw new Error("Failed");
-      } else {
-        console.warn("VITE_GOOGLE_APPS_SCRIPT_URL is not set; survey response not sent to Google Sheets.");
-      }
+      const scriptUrl = (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim() || DEFAULT_SURVEY_GOOGLE_SCRIPT_URL);
+      const res = await fetch(scriptUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed");
     } catch {
       // Allow submission to show success for demo when URL fails or is unset
     }

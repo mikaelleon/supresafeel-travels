@@ -136,21 +136,31 @@ The Web App URL is the only secret-adjacent value the **frontend** needs. It is 
 4. **Deploy**, then **Authorize** if prompted.
 5. Copy the **Web app URL** (ends with `/exec`). This is what the Vite app calls.
 
+### Production deployment (this project)
+
+The live questionnaire is wired to this Web App by default in `src/pages/Questionnaire.tsx`:
+
+- **Deployment ID:** `AKfycbw9-vXr7dEyxoDo4vXtGq8fdblov71rTHzbMpZBhyMhhNc3yAc5jCOpYydsMQXsFeY`
+- **Web App URL:** `https://script.google.com/macros/s/AKfycbw9-vXr7dEyxoDo4vXtGq8fdblov71rTHzbMpZBhyMhhNc3yAc5jCOpYydsMQXsFeY/exec`
+
+If you create a **new** deployment in Apps Script, update that constant (or use the env override below) and redeploy the site.
+
 ---
 
-## Step 5: Connect the website (environment variable)
+## Step 5: Connect the website (environment variable, optional override)
+
+The app **POSTs JSON to the production Web App URL above** even when no env file exists. To point at a different script (staging, second spreadsheet, etc.):
 
 1. In the project root, create `.env.local` (this file must stay out of git; it is usually gitignored).
 2. Add:
 
    ```env
-   VITE_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/AKfycb.../exec
+   VITE_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_OTHER_DEPLOYMENT_ID/exec
    ```
 
 3. Restart `pnpm dev` / `npm run dev` after changing env files.
-4. The questionnaire submit handler reads this variable and POSTs JSON to that URL.
 
-If the variable is missing, the app still completes the flow for local demos but does not call Google—check the browser console for a warning.
+If this variable is set, it **replaces** the default URL in code.
 
 ---
 
