@@ -136,11 +136,12 @@ const Questionnaire = () => {
           : "no",
       };
       const scriptUrl = (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim() || DEFAULT_SURVEY_GOOGLE_SCRIPT_URL);
-      // text/plain avoids CORS preflight; Apps Script still receives JSON in postData.contents
+      // urlencoded is a CORS-simple Content-Type (no preflight). Script reads e.parameter.payload.
+      const formBody = `payload=${encodeURIComponent(JSON.stringify(payload))}`;
       const res = await fetch(scriptUrl, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formBody,
       });
       const raw = await res.text();
       let data: { ok?: boolean; error?: string } = {};

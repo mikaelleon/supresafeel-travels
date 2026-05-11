@@ -11,7 +11,7 @@
  *    or let the first POST create headers if row 1 is empty.
  *
  * The React app POSTs JSON matching Questionnaire.tsx FormData + consultationRequested.
- * Body may arrive as Content-Type text/plain (CORS-safe); postData.contents is still JSON text.
+ * Body: JSON in postData.contents, or CORS-safe form field payload (urlencoded) from the website.
  */
 
 const SPREADSHEET_ID = "PASTE_YOUR_SPREADSHEET_ID_HERE";
@@ -89,13 +89,22 @@ function doGet() {
   ).setMimeType(ContentService.MimeType.JSON);
 }
 
+function parsePayload_(e) {
+  if (!e) {
+    throw new Error("Missing event");
+  }
+  if (e.parameter && Object.prototype.hasOwnProperty.call(e.parameter, "payload") && e.parameter.payload) {
+    return JSON.parse(e.parameter.payload);
+  }
+  if (e.postData && e.postData.contents) {
+    return JSON.parse(e.postData.contents);
+  }
+  throw new Error("Missing POST body");
+}
+
 function doPost(e) {
   try {
-    if (!e || !e.postData || !e.postData.contents) {
-      return jsonResponse_(400, { ok: false, error: "Missing POST body" });
-    }
-
-    var body = JSON.parse(e.postData.contents);
+    var body = parsePayload_(e);
     var sheet = getTargetSheet_();
     ensureHeaders_(sheet);
 

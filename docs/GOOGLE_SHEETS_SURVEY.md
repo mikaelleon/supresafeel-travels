@@ -69,51 +69,7 @@ The Web App URL is the only secret-adjacent value the **frontend** needs. It is 
 1. Open [script.google.com](https://script.google.com) while signed in as the same account.
 2. **New project**.
 3. Rename the project (e.g. **FeelGood Survey Webhook**).
-4. Replace the default `Code.gs` with a `doPost` implementation that reads JSON and appends a row. Example skeleton (paste and then set `SPREADSHEET_ID`):
-
-   ```javascript
-   const SPREADSHEET_ID = "PASTE_YOUR_SPREADSHEET_ID";
-
-   function doPost(e) {
-     try {
-       const body = JSON.parse(e.postData.contents);
-       const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheets()[0];
-
-       const row = [
-         new Date(),
-         body.name || "",
-         body.age || "",
-         body.gender || "",
-         body.occupation || "",
-         body.travelFrequency || "",
-         Array.isArray(body.moods) ? body.moods.join("; ") : "",
-         body.moodOther || "",
-         Array.isArray(body.travelTypes) ? body.travelTypes.join("; ") : "",
-         body.budget || "",
-         body.consultationRequested || "",
-         body.additionalNotes || "",
-         body.heardOfEmotionTravel || "",
-         Array.isArray(body.expectedFeatures) ? body.expectedFeatures.join("; ") : "",
-         Array.isArray(body.destinationTypes) ? body.destinationTypes.join("; ") : "",
-         Array.isArray(body.destinationScope) ? body.destinationScope.join("; ") : "",
-         Array.isArray(body.activities) ? body.activities.join("; ") : "",
-         body.travelDistance || "",
-         Array.isArray(body.travelWith) ? body.travelWith.join("; ") : "",
-         body.openToNew || "",
-         Array.isArray(body.transport) ? body.transport.join("; ") : "",
-         body.tripLength || "",
-         body.destinationVibe || "",
-       ];
-
-       sheet.appendRow(row);
-       return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-         .setMimeType(ContentService.MimeType.JSON);
-     } catch (err) {
-       return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
-         .setMimeType(ContentService.MimeType.JSON);
-     }
-   }
-   ```
+4. Replace the default `Code.gs` with the script in **`docs/apps-script/survey-webhook.gs`** (copy into the editor, set `SPREADSHEET_ID`, save). It appends rows and parses either **form field `payload`** (what the live site sends, CORS-safe) or raw JSON in `postData.contents`.
 
 5. **Save** the project.
 
@@ -168,7 +124,7 @@ If this variable is set, it **replaces** the default URL in code.
 
 Apps Script Web Apps do **not** handle **preflight** (`OPTIONS`) the way browsers expect when you send `Content-Type: application/json`. The browser then blocks the request with a CORS error before `doPost` runs.
 
-This project’s frontend posts the same JSON string with **`Content-Type: text/plain;charset=utf-8`**, which is a **simple request** (no preflight). `doPost` still reads `e.postData.contents` and `JSON.parse` works unchanged.
+This project’s frontend posts **`application/x-www-form-urlencoded`** with one field **`payload`** (value = `encodeURIComponent(JSON.stringify(...))`). That Content-Type is **CORS-simple** (no preflight). The Apps Script reads **`e.parameter.payload`** and parses JSON. Plain JSON in `postData.contents` is still supported for manual tests.
 
 Also check:
 
