@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Plane } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -18,9 +19,8 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-          <Plane className="w-6 h-6 text-primary" />
-          <span className="font-heading text-xl font-bold text-foreground">SurpreSaFeel</span>
+        <Link to="/" className="flex items-center shrink-0 py-1" onClick={() => setMobileOpen(false)}>
+          <BrandLogo variant="navbar" />
         </Link>
 
         {/* Desktop nav */}

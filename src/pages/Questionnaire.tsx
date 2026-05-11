@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, CheckCircle2, Heart, XCircle, type LucideIcon } from "lucide-react";
+import { Check, CheckCircle2, XCircle, type LucideIcon } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import BrandLogo from "@/components/BrandLogo";
 
 const ageOptions = ["Below 18", "18-24", "25-34", "35-44", "45 and above"];
 const genderOptions = ["Male", "Female", "Prefer not to say"];
@@ -223,10 +224,8 @@ const Questionnaire = () => {
     const firstName = form.name.split(" ")[0];
     return (
       <div className="page-fade-in pt-20 min-h-screen flex items-center justify-center px-4">
-        <div className="max-w-md text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
-            <Heart className="w-8 h-8 text-primary" fill="currentColor" fillOpacity={0.35} />
-          </div>
+        <div className="max-w-md text-center flex flex-col items-center">
+          <BrandLogo variant="compact" className="mb-6" />
           <h1 className="font-heading text-3xl font-bold mb-4">Your response has been received!</h1>
           <p className="text-muted-foreground mb-8">
             Thank you, {firstName}! Your answers will help us understand how emotions shape travel. We appreciate your time!

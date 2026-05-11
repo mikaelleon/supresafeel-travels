@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Plane, Mail, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 const Footer = () => {
   return (
@@ -8,9 +9,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Plane className="w-5 h-5 text-primary" />
-              <span className="font-heading text-lg font-bold">SurpreSaFeel Travels</span>
+            <div className="mb-3">
+              <BrandLogo variant="footer" />
             </div>
             <p className="text-sm text-background/70 italic">"Where Emotion Leads, We Follow."</p>
           </div>
