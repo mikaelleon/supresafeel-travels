@@ -107,6 +107,8 @@ If the build output directory is not **`dist`**, Pages serves the repo root `ind
 
 After fixing settings, trigger a new deployment. Optionally set **`NODE_VERSION`** to `20` under Environment variables.
 
+**Package manager on Cloudflare:** If a broken or outdated **`bun.lockb`** is in the repo, Pages may run **`bun install --frozen-lockfile`** and fail. This project uses **`pnpm`** (see `packageManager` in `package.json` and `pnpm-lock.yaml`). Do not commit **`bun.lockb`** unless you maintain it with Bun; it is listed in `.gitignore`.
+
 ## Testing
 
 ```bash
