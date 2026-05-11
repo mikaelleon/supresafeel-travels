@@ -140,12 +140,28 @@ const Questionnaire = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Failed");
-    } catch {
-      // Allow submission to show success for demo when URL fails or is unset
+      const raw = await res.text();
+      let data: { ok?: boolean; error?: string } = {};
+      try {
+        data = raw ? (JSON.parse(raw) as { ok?: boolean; error?: string }) : {};
+      } catch {
+        setError(
+          "Could not read server response. Confirm the Apps Script Web App URL and that the deployment returns JSON.",
+        );
+        return;
+      }
+      if (data.ok === true) {
+        setSubmitted(true);
+        return;
+      }
+      const serverMsg = typeof data.error === "string" && data.error.trim() !== "" ? data.error.trim() : null;
+      setError(serverMsg ?? `Submission failed (HTTP ${res.status}). Try again or contact support.`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Network error";
+      setError(`${msg}. Check your connection and try again.`);
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
-    setSubmitted(true);
   };
 
   // Reusable UI helpers
