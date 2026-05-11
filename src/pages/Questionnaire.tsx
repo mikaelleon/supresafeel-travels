@@ -80,7 +80,7 @@ const consultationCardOptions: { value: "yes" | "no"; label: string; Icon: Lucid
 
 /** Default production Apps Script Web App (override with VITE_GOOGLE_APPS_SCRIPT_URL). */
 const DEFAULT_SURVEY_GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbz4bvDe7Y_f06SJZmsbK9p9zyJGES3p_WLXa2EXdJoXFRpL5Qh6yvt0lhe7G6cT8oU/exec";
+  "https://script.google.com/macros/s/AKfycbzvrKEUsriJ_iGWtk10GE3ZQTkHhMYsXaIvGSKBzWrnidRkI18ygXmf2ThsmkEZ3n4/exec";
 
 const totalSteps = 9;
 
