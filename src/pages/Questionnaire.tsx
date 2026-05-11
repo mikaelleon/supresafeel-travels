@@ -143,13 +143,16 @@ const Questionnaire = () => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formBody,
       });
-      const raw = await res.text();
+      const raw = (await res.text()).trim();
       let data: { ok?: boolean; error?: string } = {};
       try {
         data = raw ? (JSON.parse(raw) as { ok?: boolean; error?: string }) : {};
       } catch {
+        const looksLikeEchoedRequest = raw.startsWith("payload=");
         setError(
-          "Could not read server response. Confirm the Apps Script Web App URL and that the deployment returns JSON.",
+          looksLikeEchoedRequest
+            ? "Server returned raw form data instead of JSON. Redeploy Apps Script with the latest survey-webhook.gs (parsePayload_ must decode the payload= field from postData.contents)."
+            : "Could not read server response. Confirm the Web App URL and that the script returns JSON.",
         );
         return;
       }

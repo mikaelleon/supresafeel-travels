@@ -89,17 +89,46 @@ function doGet() {
   ).setMimeType(ContentService.MimeType.JSON);
 }
 
+/**
+ * Pull JSON string from urlencoded body (payload=...). Web Apps often omit or truncate e.parameter.payload.
+ */
+function extractPayloadJsonFromUrlEncoded_(raw) {
+  var key = "payload=";
+  var idx = raw.indexOf(key);
+  if (idx === -1) {
+    return null;
+  }
+  var encoded = raw.substring(idx + key.length);
+  encoded = encoded.replace(/\+/g, " ");
+  return decodeURIComponent(encoded);
+}
+
 function parsePayload_(e) {
   if (!e) {
     throw new Error("Missing event");
   }
-  if (e.parameter && Object.prototype.hasOwnProperty.call(e.parameter, "payload") && e.parameter.payload) {
-    return JSON.parse(e.parameter.payload);
+  if (e.parameter && e.parameter.payload) {
+    try {
+      return JSON.parse(e.parameter.payload);
+    } catch (ignore) {
+      // Large forms: parameter may be truncated — use postData.contents
+    }
   }
-  if (e.postData && e.postData.contents) {
-    return JSON.parse(e.postData.contents);
+  if (!e.postData || !e.postData.contents) {
+    throw new Error("Missing POST body");
   }
-  throw new Error("Missing POST body");
+  var raw = String(e.postData.contents).replace(/^\s+|\s+$/g, "");
+  var ct = String(e.postData.type || "").toLowerCase();
+  var looksForm =
+    ct.indexOf("application/x-www-form-urlencoded") !== -1 ||
+    raw.indexOf("payload=") === 0;
+  if (looksForm) {
+    var jsonStr = extractPayloadJsonFromUrlEncoded_(raw);
+    if (jsonStr) {
+      return JSON.parse(jsonStr);
+    }
+  }
+  return JSON.parse(raw);
 }
 
 function doPost(e) {

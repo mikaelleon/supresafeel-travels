@@ -124,7 +124,7 @@ If this variable is set, it **replaces** the default URL in code.
 
 Apps Script Web Apps do **not** handle **preflight** (`OPTIONS`) the way browsers expect when you send `Content-Type: application/json`. The browser then blocks the request with a CORS error before `doPost` runs.
 
-This project’s frontend posts **`application/x-www-form-urlencoded`** with one field **`payload`** (value = `encodeURIComponent(JSON.stringify(...))`). That Content-Type is **CORS-simple** (no preflight). The Apps Script reads **`e.parameter.payload`** and parses JSON. Plain JSON in `postData.contents` is still supported for manual tests.
+This project’s frontend posts **`application/x-www-form-urlencoded`** with one field **`payload`** (value = `encodeURIComponent(JSON.stringify(...))`). That Content-Type is **CORS-simple** (no preflight). In Web Apps, **`e.parameter.payload` can be missing or truncated** for large bodies, so the script in **`docs/apps-script/survey-webhook.gs`** decodes **`payload=` from `e.postData.contents`** as well. Plain JSON in `postData.contents` is still supported for manual tests.
 
 Also check:
 
