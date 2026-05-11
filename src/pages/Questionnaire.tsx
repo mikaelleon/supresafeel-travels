@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Check, CheckCircle2, Heart, XCircle, type LucideIcon } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 const ageOptions = ["Below 18", "18-24", "25-34", "35-44", "45 and above"];
@@ -64,14 +65,16 @@ interface FormData {
   destinationVibe: string;
 }
 
-const consultationCardOptions: { value: "yes" | "no"; label: string }[] = [
+const consultationCardOptions: { value: "yes" | "no"; label: string; Icon: LucideIcon }[] = [
   {
     value: "yes",
-    label: "✅ Yes, I would like to include a mental health consultation (with additional fee)",
+    label: "Yes, I would like to include a mental health consultation (with additional fee)",
+    Icon: CheckCircle2,
   },
   {
     value: "no",
-    label: "❌ No, I will proceed with the standard emotional assessment only",
+    label: "No, I will proceed with the standard emotional assessment only",
+    Icon: XCircle,
   },
 ];
 
@@ -127,14 +130,19 @@ const Questionnaire = () => {
           ? form.consultationRequested
           : "no",
       };
-      const res = await fetch("YOUR_APPS_SCRIPT_URL_HERE", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Failed");
+      const scriptUrl = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim();
+      if (scriptUrl) {
+        const res = await fetch(scriptUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("Failed");
+      } else {
+        console.warn("VITE_GOOGLE_APPS_SCRIPT_URL is not set; survey response not sent to Google Sheets.");
+      }
     } catch {
-      // Allow submission to show success for demo since URL is placeholder
+      // Allow submission to show success for demo when URL fails or is unset
     }
     setSubmitting(false);
     setSubmitted(true);
@@ -157,23 +165,27 @@ const Questionnaire = () => {
     value,
     onChange,
   }: {
-    options: { value: "yes" | "no"; label: string }[];
+    options: { value: "yes" | "no"; label: string; Icon: LucideIcon }[];
     value: "" | "yes" | "no";
     onChange: (v: "yes" | "no") => void;
   }) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {options.map(opt => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          className={`rounded-xl px-4 py-5 border-2 text-sm font-medium text-left transition-all min-h-[5.5rem] flex items-center ${
-            value === opt.value ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
+      {options.map(opt => {
+        const Icon = opt.Icon;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={`rounded-xl px-4 py-5 border-2 text-sm font-medium text-left transition-all min-h-[5.5rem] flex items-start gap-3 ${
+              value === opt.value ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"
+            }`}
+          >
+            <Icon className={`w-6 h-6 shrink-0 mt-0.5 ${value === opt.value ? "text-primary" : "text-muted-foreground"}`} />
+            <span>{opt.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 
@@ -182,8 +194,8 @@ const Questionnaire = () => {
       {options.map(opt => (
         <button key={opt} type="button" onClick={() => onToggle(opt)}
           className={`rounded-xl px-4 py-3 border-2 text-sm font-medium text-left transition-all flex items-center gap-3 ${selected.includes(opt) ? "border-primary bg-primary/10 shadow-sm" : "border-border hover:border-primary/50"}`}>
-          <span className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 text-xs ${selected.includes(opt) ? "border-primary bg-primary text-primary-foreground" : "border-muted-foreground/40"}`}>
-            {selected.includes(opt) && "✓"}
+          <span className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 ${selected.includes(opt) ? "border-primary bg-primary text-primary-foreground" : "border-muted-foreground/40"}`}>
+            {selected.includes(opt) ? <Check className="w-3.5 h-3.5" strokeWidth={3} /> : null}
           </span>
           {opt}
         </button>
@@ -196,7 +208,9 @@ const Questionnaire = () => {
     return (
       <div className="page-fade-in pt-20 min-h-screen flex items-center justify-center px-4">
         <div className="max-w-md text-center">
-          <span className="text-6xl block mb-4">💛</span>
+          <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
+            <Heart className="w-8 h-8 text-primary" fill="currentColor" fillOpacity={0.35} />
+          </div>
           <h1 className="font-heading text-3xl font-bold mb-4">Your response has been received!</h1>
           <p className="text-muted-foreground mb-8">
             Thank you, {firstName}! Your answers will help us understand how emotions shape travel. We appreciate your time!

@@ -1,13 +1,23 @@
 import { Link } from "react-router-dom";
-import { Heart, Map, Compass } from "lucide-react";
+import {
+  Backpack,
+  Compass,
+  Heart,
+  Map,
+  Mountain,
+  Sunrise,
+  Users,
+  Waves,
+  type LucideIcon,
+} from "lucide-react";
 
-const trips = [
-  { emoji: "🌅", name: "Tagaytay Escape", mood: "Stress Relief", location: "Tagaytay, Batangas" },
-  { emoji: "🌊", name: "Batangas Beach Reset", mood: "Relaxation", location: "Batangas" },
-  { emoji: "🏔️", name: "Baguio Wanderer", mood: "Budget Adventure", location: "Baguio City" },
-  { emoji: "💕", name: "Cebu Romantic Getaway", mood: "Romance", location: "Cebu" },
-  { emoji: "👨‍👩‍👧", name: "Zambales Family Trip", mood: "Bonding", location: "Zambales" },
-  { emoji: "🎒", name: "Vigan Solo Journey", mood: "Self-Discovery", location: "Vigan, Ilocos Sur" },
+const trips: { icon: LucideIcon; name: string; mood: string; location: string }[] = [
+  { icon: Sunrise, name: "Tagaytay Escape", mood: "Stress Relief", location: "Tagaytay, Batangas" },
+  { icon: Waves, name: "Batangas Beach Reset", mood: "Relaxation", location: "Batangas" },
+  { icon: Mountain, name: "Baguio Wanderer", mood: "Budget Adventure", location: "Baguio City" },
+  { icon: Heart, name: "Cebu Romantic Getaway", mood: "Romance", location: "Cebu" },
+  { icon: Users, name: "Zambales Family Trip", mood: "Bonding", location: "Zambales" },
+  { icon: Backpack, name: "Vigan Solo Journey", mood: "Self-Discovery", location: "Vigan, Ilocos Sur" },
 ];
 
 const steps = [
@@ -66,16 +76,21 @@ const Index = () => {
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-center mb-4">Sample Itineraries</h2>
           <p className="text-center text-muted-foreground mb-12">Discover trips designed around real emotions</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trips.map((t, i) => (
+            {trips.map((t, i) => {
+              const TripIcon = t.icon;
+              return (
               <div key={i} className="bg-card rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow border border-border group">
-                <span className="text-4xl block mb-3">{t.emoji}</span>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                  <TripIcon className="w-6 h-6 text-primary" />
+                </div>
                 <h3 className="font-heading text-lg font-semibold mb-1">{t.name}</h3>
                 <p className="text-sm text-muted-foreground mb-3">{t.location}</p>
                 <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                   {t.mood}
                 </span>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>

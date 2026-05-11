@@ -1,13 +1,22 @@
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
+import {
+  Backpack,
+  Check,
+  Heart,
+  Leaf,
+  Mountain,
+  Users,
+  Waves,
+  type LucideIcon,
+} from "lucide-react";
 
-const moods = [
-  { emoji: "😌", name: "Stress Relief", desc: "Perfect for when you need to breathe again", dest: "Tagaytay, Batangas" },
-  { emoji: "🌊", name: "Relaxation", desc: "Slow down, feel the sea, reset your mind", dest: "Zambales, La Union" },
-  { emoji: "❤️", name: "Romance", desc: "Intimate escapes for two", dest: "Cebu, Palawan" },
-  { emoji: "🧗", name: "Adventure", desc: "Chase thrills and new experiences", dest: "Baguio, Ilocos" },
-  { emoji: "👨‍👩‍👧", name: "Bonding", desc: "Create memories with the people you love", dest: "Batangas, Tagaytay" },
-  { emoji: "🎒", name: "Solo Discovery", desc: "Find yourself on the road alone", dest: "Vigan, Batad" },
+const moods: { icon: LucideIcon; name: string; desc: string; dest: string }[] = [
+  { icon: Leaf, name: "Stress Relief", desc: "Perfect for when you need to breathe again", dest: "Tagaytay, Batangas" },
+  { icon: Waves, name: "Relaxation", desc: "Slow down, feel the sea, reset your mind", dest: "Zambales, La Union" },
+  { icon: Heart, name: "Romance", desc: "Intimate escapes for two", dest: "Cebu, Palawan" },
+  { icon: Mountain, name: "Adventure", desc: "Chase thrills and new experiences", dest: "Baguio, Ilocos" },
+  { icon: Users, name: "Bonding", desc: "Create memories with the people you love", dest: "Batangas, Tagaytay" },
+  { icon: Backpack, name: "Solo Discovery", desc: "Find yourself on the road alone", dest: "Vigan, Batad" },
 ];
 
 const included = [
@@ -39,14 +48,19 @@ const Services = () => {
       {/* Mood Cards */}
       <section className="pb-20 px-4">
         <div className="container mx-auto max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {moods.map((m, i) => (
+          {moods.map((m, i) => {
+            const MoodIcon = m.icon;
+            return (
             <div key={i} className="bg-card rounded-2xl p-6 shadow-md border border-border hover:shadow-lg transition-shadow">
-              <span className="text-4xl block mb-3">{m.emoji}</span>
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                <MoodIcon className="w-6 h-6 text-primary" />
+              </div>
               <h3 className="font-heading text-xl font-semibold mb-1">{m.name}</h3>
               <p className="text-sm text-muted-foreground mb-3">{m.desc}</p>
               <p className="text-xs text-primary font-semibold">{m.dest}</p>
             </div>
-          ))}
+          );
+          })}
         </div>
       </section>
 

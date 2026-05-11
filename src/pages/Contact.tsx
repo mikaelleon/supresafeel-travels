@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Phone, Clock } from "lucide-react";
+import { CheckCircle2, Clock, Mail, Phone } from "lucide-react";
 
 const Contact = () => {
   const [sent, setSent] = useState(false);
@@ -51,7 +51,9 @@ const Contact = () => {
             <div className="bg-card rounded-2xl p-6 md:p-8 shadow-md border border-border">
               {sent ? (
                 <div className="text-center py-8">
-                  <span className="text-4xl block mb-4">😊</span>
+                  <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="w-7 h-7 text-primary" />
+                  </div>
                   <h3 className="font-heading text-xl font-semibold mb-2">Message sent!</h3>
                   <p className="text-sm text-muted-foreground">We'll get back to you within 24 hours.</p>
                 </div>
