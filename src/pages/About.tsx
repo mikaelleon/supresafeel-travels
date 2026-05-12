@@ -125,17 +125,26 @@ const About = () => {
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage:
-              "linear-gradient(105deg, hsl(var(--primary) / 0.88) 0%, hsl(var(--primary) / 0.55) 42%, hsl(var(--background) / 0.25) 100%), url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80)",
+              "url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80)",
           }}
           aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" aria-hidden />
+        <div
+          className="absolute inset-0 z-[1]"
+          style={{
+            background:
+              "linear-gradient(to top right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)",
+          }}
+          aria-hidden
+        />
         <div className="relative z-10 container mx-auto px-4 pb-14 md:pb-20 max-w-4xl">
-          <p className="text-primary-foreground/90 text-sm font-medium tracking-wide uppercase mb-2">About us</p>
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground drop-shadow-sm mb-4">
+          <p className="text-primary-foreground/90 text-sm font-medium tracking-wide uppercase mb-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
+            About us
+          </p>
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4 [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
             Heart-to-heart travel
           </h1>
-          <p className="text-lg md:text-xl text-primary-foreground/95 max-w-2xl leading-relaxed">
+          <p className="text-lg md:text-xl text-primary-foreground max-w-2xl leading-relaxed [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
             Filipino planners who build trips around how you want to feel—then sweat the details so you do not have to.
           </p>
         </div>
