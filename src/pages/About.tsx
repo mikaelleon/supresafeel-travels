@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Eye, Heart, Fingerprint, Shield, Target } from "lucide-react";
+import { Compass, Heart, Fingerprint, Shield, Telescope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const team: {
@@ -61,30 +61,21 @@ const team: {
   },
 ];
 
-const values: { icon: typeof Heart; title: string; lines: [string, string] }[] = [
+const values: { icon: typeof Heart; title: string; body: string }[] = [
   {
     icon: Heart,
     title: "Emotion First",
-    lines: [
-      "We ask how you want to feel on the trip—not only which stamps you want in your passport.",
-      "That emotional anchor becomes the filter for destinations, pacing, and the kind of memories we aim for.",
-    ],
+    body: "We ask how you want to feel—not only which passport stamps you want—and let that anchor filter destinations, pacing, and memories.",
   },
   {
     icon: Fingerprint,
     title: "Personalized Always",
-    lines: [
-      "Templates get tossed. Your story, budget, and bandwidth shape every suggestion we make.",
-      "Two travelers with the same city on their list can still get wildly different days because their reasons for going differ.",
-    ],
+    body: "Templates get tossed: your story, budget, and bandwidth shape every suggestion, so two travelers with the same city can still get very different days.",
   },
   {
     icon: Shield,
     title: "Reliable & Honest",
-    lines: [
-      "We work with operators we would send our own families to, and we say no when something is a bad fit.",
-      "If a route is unrealistic or a season is wrong for the vibe you want, you will hear it early—not at the airport.",
-    ],
+    body: "We work with operators we would send our own families to, say no when something is a bad fit, and flag bad routes or seasons early—not at the airport.",
   },
 ];
 
@@ -164,11 +155,14 @@ const About = () => {
               We are a digital-first travel planning service based in the Philippines, dedicated to turning your emotions into meaningful journeys—so the itinerary matches the person you are this season, not a generic checklist.
             </p>
           </div>
-          <blockquote className="mt-10 relative overflow-hidden rounded-2xl border-2 border-primary/35 bg-gradient-to-br from-primary/25 via-primary/15 to-secondary/10 p-8 md:p-10 shadow-lg ring-1 ring-primary/20">
-            <span className="absolute left-4 top-4 font-serif text-6xl md:text-7xl text-primary/25 leading-none select-none" aria-hidden>
+          <blockquote className="mt-10 relative overflow-hidden rounded-2xl border-y border-r border-amber-200/90 bg-amber-100 border-l-4 border-l-amber-500 pl-6 p-8 md:p-10 shadow-lg">
+            <span
+              className="absolute left-3 top-2 md:left-4 md:top-3 font-heading text-7xl md:text-8xl text-amber-500/90 leading-none select-none pointer-events-none"
+              aria-hidden
+            >
               &ldquo;
             </span>
-            <p className="relative z-10 pl-2 md:pl-6 font-serif text-xl md:text-2xl lg:text-[1.65rem] italic text-foreground leading-[1.65] text-center md:text-left">
+            <p className="relative z-10 pt-10 md:pt-12 font-heading text-lg md:text-xl italic text-foreground leading-[1.65] text-center md:text-left">
               To deliver tailor-made travel experiences that are heart-to-heart, with an emphasis on bringing in emotions, reliability, quality, and individuality.
             </p>
           </blockquote>
@@ -205,18 +199,18 @@ const About = () => {
           <div className="container mx-auto px-4 max-w-6xl">
             <h2 className="font-heading text-3xl font-bold text-center mb-10 md:mb-12">Mission &amp; Vision</h2>
             <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-border/70 shadow-md">
-              <div className="bg-gradient-to-br from-primary/20 via-primary/8 to-background p-8 md:p-12 text-left border-b md:border-b-0 md:border-r border-border/60">
-                <div className="w-14 h-14 rounded-xl bg-primary/25 flex items-center justify-center mb-6">
-                  <Target className="w-7 h-7 text-primary" aria-hidden />
+              <div className="bg-amber-50 border-t-4 border-amber-400 p-8 md:p-12 text-left border-b md:border-b-0 md:border-r border-border/60">
+                <div className="w-14 h-14 rounded-xl bg-amber-100 flex items-center justify-center mb-6">
+                  <Compass className="w-7 h-7 text-amber-500" aria-hidden />
                 </div>
                 <h3 className="font-heading text-2xl font-bold mb-4">Our Mission</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   To provide personalized travel planning services that prioritize emotional connection, cultural sensitivity, and unforgettable experiences for every traveler.
                 </p>
               </div>
-              <div className="bg-gradient-to-bl from-secondary/25 via-secondary/10 to-muted/30 p-8 md:p-12 text-left md:text-right">
-                <div className="w-14 h-14 rounded-xl bg-secondary/35 flex items-center justify-center mb-6 md:ml-auto">
-                  <Eye className="w-7 h-7 text-secondary-foreground" aria-hidden />
+              <div className="bg-teal-50 border-t-4 border-teal-500 p-8 md:p-12 text-left md:text-right">
+                <div className="w-14 h-14 rounded-xl bg-teal-100 flex items-center justify-center mb-6 md:ml-auto">
+                  <Telescope className="w-7 h-7 text-teal-600" aria-hidden />
                 </div>
                 <h3 className="font-heading text-2xl font-bold mb-4">Our Vision</h3>
                 <p className="text-muted-foreground leading-relaxed md:ml-auto md:max-w-md">
@@ -291,10 +285,7 @@ const About = () => {
                     <v.icon className="w-8 h-8 md:w-10 md:h-10 text-primary" strokeWidth={1.75} aria-hidden />
                   </div>
                   <h3 className="font-heading text-xl font-bold mb-5">{v.title}</h3>
-                  <div className="space-y-3 text-muted-foreground text-left text-[0.95rem] leading-relaxed">
-                    <p>{v.lines[0]}</p>
-                    <p>{v.lines[1]}</p>
-                  </div>
+                  <p className="text-left text-sm text-gray-500 leading-relaxed">{v.body}</p>
                 </div>
               ))}
             </div>
@@ -311,9 +302,8 @@ const About = () => {
           </p>
           <Button
             asChild
-            size="lg"
-            variant="secondary"
-            className="font-semibold shadow-lg"
+            variant="ghost"
+            className="h-auto rounded-md px-8 py-3 text-base font-semibold shadow-lg bg-white text-teal-800 transition-colors duration-200 hover:bg-teal-100 hover:text-teal-950"
           >
             <Link to="/questionnaire">Take the Emotion Quiz</Link>
           </Button>
