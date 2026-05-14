@@ -96,8 +96,8 @@ The Web App URL is the only secret-adjacent value the **frontend** needs. It is 
 
 The live questionnaire is wired to this Web App by default in `src/pages/Questionnaire.tsx`:
 
-- **Deployment ID:** `AKfycby1NioDwcdhb1pg80K2z0L4Lqi8Y2lerpGOthoNzeJlbzJJtmk_zNDJPgkFzMccng`
-- **Web App URL:** `https://script.google.com/macros/s/AKfycby1NioDwcdhb1pg80K2z0L4Lqi8Y2lerpGOthoNzeJlbzJJtmk_zNDJPgkFzMccng/exec`
+- **Deployment ID:** `AKfycbxpjklRLERyQJEQ6j1pKNq93cNg5KTQbDecEpZOT7BNrBD6kk8dmQAGpvnPqtYQRic`
+- **Web App URL:** `https://script.google.com/macros/s/AKfycbxpjklRLERyQJEQ6j1pKNq93cNg5KTQbDecEpZOT7BNrBD6kk8dmQAGpvnPqtYQRic/exec`
 
 If you create a **new** deployment in Apps Script, update that constant (or use the env override below) and redeploy the site.
 

@@ -320,7 +320,7 @@ const consultationCardOptions: { value: "yes" | "no"; label: string; LeadIcon: L
 
 /** Default production Apps Script Web App (override with VITE_GOOGLE_APPS_SCRIPT_URL). */
 const DEFAULT_SURVEY_GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby1NioDwcdhb1pg80K2z0L4Lqi8Y2lerpGOthoNzeJlbzJJtmk_zNDJPgkFzMccng/exec";
+  "https://script.google.com/macros/s/AKfycbxpjklRLERyQJEQ6j1pKNq93cNg5KTQbDecEpZOT7BNrBD6kk8dmQAGpvnPqtYQRic/exec";
 
 function isValidEmail(value: string): boolean {
   const t = value.trim();
