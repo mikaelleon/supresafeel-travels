@@ -16,6 +16,7 @@ import {
   Check,
   CheckCircle2,
   Circle,
+  ClipboardList,
   CloudSun,
   Coins,
   Compass,
@@ -36,6 +37,7 @@ import {
   MapPinned,
   Moon,
   Mountain,
+  PencilLine,
   Plane,
   Scale,
   School,
@@ -44,6 +46,7 @@ import {
   Shuffle,
   Smile,
   Sparkles,
+  Stethoscope,
   Sun,
   Trees,
   User,
@@ -56,6 +59,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import {
   Select,
@@ -95,7 +99,15 @@ const travelFrequencyIcons: Record<string, LucideIcon> = {
 };
 
 const moodOptions = [
-  "Happy", "Sad", "Excited", "Inspired", "Peaceful", "Adventurous", "Relaxed", "Angry",
+  "Happy",
+  "Sad",
+  "Excited",
+  "Inspired",
+  "Peaceful",
+  "Adventurous",
+  "Relaxed",
+  "Angry",
+  "Other",
 ];
 const moodIcons: Record<string, LucideIcon> = {
   Happy: Smile,
@@ -106,9 +118,10 @@ const moodIcons: Record<string, LucideIcon> = {
   Adventurous: Compass,
   Relaxed: Armchair,
   Angry: Annoyed,
+  Other: PencilLine,
 };
 
-const travelTypes = ["Relaxation", "Adventure", "Cultural", "Romantic trips", "Family trips", "Solo travel"];
+const travelTypes = ["Relaxation", "Adventure", "Cultural", "Romantic trips", "Family trips", "Solo travel", "Other"];
 const travelTypeIcons: Record<string, LucideIcon> = {
   Relaxation: Armchair,
   Adventure: Mountain,
@@ -116,6 +129,7 @@ const travelTypeIcons: Record<string, LucideIcon> = {
   "Romantic trips": Heart,
   "Family trips": Users,
   "Solo travel": User,
+  Other: PencilLine,
 };
 
 const budgetOptions = [
@@ -137,6 +151,7 @@ const featureOptions = [
   "Budget-friendly options",
   "Flexible schedule",
   "24/7 assistance",
+  "Other",
 ];
 const featureIcons: Record<string, LucideIcon> = {
   "Personalized itinerary": Map,
@@ -144,6 +159,7 @@ const featureIcons: Record<string, LucideIcon> = {
   "Budget-friendly options": Coins,
   "Flexible schedule": Calendar,
   "24/7 assistance": Headphones,
+  Other: PencilLine,
 };
 
 const destinationTypeOptions = [
@@ -152,6 +168,7 @@ const destinationTypeOptions = [
   "Cities",
   "Countryside/Rural areas",
   "Historical/Cultural sites",
+  "Other",
 ];
 const destinationTypeIcons: Record<string, LucideIcon> = {
   "Beach destinations": Waves,
@@ -159,6 +176,7 @@ const destinationTypeIcons: Record<string, LucideIcon> = {
   Cities: Building2,
   "Countryside/Rural areas": Trees,
   "Historical/Cultural sites": Landmark,
+  Other: PencilLine,
 };
 
 const destinationScopeOptions = [
@@ -180,6 +198,7 @@ const activityOptions = [
   "Sightseeing",
   "Cultural experiences",
   "Nightlife",
+  "Other",
 ];
 const activityIcons: Record<string, LucideIcon> = {
   "Swimming / Beach activities": Waves,
@@ -189,6 +208,7 @@ const activityIcons: Record<string, LucideIcon> = {
   Sightseeing: Camera,
   "Cultural experiences": Drama,
   Nightlife: Moon,
+  Other: PencilLine,
 };
 
 const travelDistanceOptions = [
@@ -204,23 +224,25 @@ const travelDistanceIcons: Record<string, LucideIcon> = {
   "Willing to travel long distances": Plane,
 };
 
-const travelWithOptions = ["Alone", "Friends", "Family", "Partner"];
+const travelWithOptions = ["Alone", "Friends", "Family", "Partner", "Other"];
 const travelWithIcons: Record<string, LucideIcon> = {
   Alone: User,
   Friends: UserPlus,
   Family: UsersRound,
   Partner: Heart,
+  Other: PencilLine,
 };
 
 const openToNewOptions = ["Yes", "Maybe", "No"];
 const openToNewIcons: Record<string, LucideIcon> = { Yes: Sparkles, Maybe: HelpCircle, No: Home };
 
-const transportOptions = ["Land (bus, car)", "Airplane", "Boat/ferry", "Mix of all"];
+const transportOptions = ["Land (bus, car)", "Airplane", "Boat/ferry", "Mix of all", "Other"];
 const transportIcons: Record<string, LucideIcon> = {
   "Land (bus, car)": Bus,
   Airplane: Plane,
   "Boat/ferry": Ship,
   "Mix of all": Shuffle,
+  Other: PencilLine,
 };
 
 const tripLengthOptions = ["Day trip", "2–3 days", "4–7 days", "More than a week"];
@@ -252,6 +274,7 @@ const occupationPresets = [
 
 interface FormData {
   name: string;
+  email: string;
   age: string;
   gender: string;
   occupationDropdown: string;
@@ -260,30 +283,38 @@ interface FormData {
   moods: string[];
   moodOther: string;
   travelTypes: string[];
+  travelTypesOther: string;
   budget: string;
   consultationRequested: "" | "yes" | "no";
   additionalNotes: string;
   heardOfEmotionTravel: string;
   expectedFeatures: string[];
+  expectedFeaturesOther: string;
   destinationTypes: string[];
+  destinationTypesOther: string;
   destinationScope: string;
   activities: string[];
+  activitiesOther: string;
   travelDistance: string;
   travelWith: string[];
+  travelWithOther: string;
   openToNew: string;
   transport: string[];
+  transportOther: string;
   tripLength: string;
   destinationVibe: string;
 }
 
-const consultationCardOptions: { value: "yes" | "no"; label: string }[] = [
+const consultationCardOptions: { value: "yes" | "no"; label: string; LeadIcon: LucideIcon }[] = [
   {
     value: "yes",
     label: "Yes, I would like to include a mental health consultation (with additional fee)",
+    LeadIcon: Stethoscope,
   },
   {
     value: "no",
     label: "No, I will proceed with the standard emotional assessment only",
+    LeadIcon: ClipboardList,
   },
 ];
 
@@ -291,11 +322,18 @@ const consultationCardOptions: { value: "yes" | "no"; label: string }[] = [
 const DEFAULT_SURVEY_GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycby1NioDwcdhb1pg80K2z0L4Lqi8Y2lerpGOthoNzeJlbzJJtmk_zNDJPgkFzMccng/exec";
 
+function isValidEmail(value: string): boolean {
+  const t = value.trim();
+  if (!t) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
+}
+
 function getInvalidSurveyGroups(step: number, form: FormData): Set<string> {
   const invalid = new Set<string>();
   const occInvalid = form.occupationDropdown === "Other" && form.occupationOther.trim() === "";
   if (step === 1) {
     if (form.name.trim() === "") invalid.add("name");
+    if (!isValidEmail(form.email)) invalid.add("email");
     if (form.age === "") invalid.add("age");
     if (form.gender === "") invalid.add("gender");
     if (occInvalid) invalid.add("occupation");
@@ -304,11 +342,16 @@ function getInvalidSurveyGroups(step: number, form: FormData): Set<string> {
   }
   if (step === 2) {
     if (form.travelTypes.length === 0) invalid.add("travelTypes");
+    if (form.travelTypes.includes("Other") && form.travelTypesOther.trim() === "") invalid.add("travelTypes");
     if (form.expectedFeatures.length === 0) invalid.add("expectedFeatures");
+    if (form.expectedFeatures.includes("Other") && form.expectedFeaturesOther.trim() === "") {
+      invalid.add("expectedFeatures");
+    }
     if (form.openToNew === "") invalid.add("openToNew");
     if (form.destinationVibe === "") invalid.add("destinationVibe");
     if (form.travelFrequency === "") invalid.add("travelFrequency");
     if (form.moods.length === 0) invalid.add("moods");
+    if (form.moods.includes("Other") && form.moodOther.trim() === "") invalid.add("moods");
     return invalid;
   }
   if (step === 3) {
@@ -316,13 +359,19 @@ function getInvalidSurveyGroups(step: number, form: FormData): Set<string> {
     if (form.travelDistance === "") invalid.add("travelDistance");
     if (form.tripLength === "") invalid.add("tripLength");
     if (form.travelWith.length === 0) invalid.add("travelWith");
+    if (form.travelWith.includes("Other") && form.travelWithOther.trim() === "") invalid.add("travelWith");
     if (form.transport.length === 0) invalid.add("transport");
+    if (form.transport.includes("Other") && form.transportOther.trim() === "") invalid.add("transport");
     return invalid;
   }
   if (step === 4) {
     if (form.destinationTypes.length === 0) invalid.add("destinationTypes");
+    if (form.destinationTypes.includes("Other") && form.destinationTypesOther.trim() === "") {
+      invalid.add("destinationTypes");
+    }
     if (form.destinationScope === "") invalid.add("destinationScope");
     if (form.activities.length === 0) invalid.add("activities");
+    if (form.activities.includes("Other") && form.activitiesOther.trim() === "") invalid.add("activities");
     if (form.consultationRequested !== "yes" && form.consultationRequested !== "no") invalid.add("consultation");
     return invalid;
   }
@@ -336,6 +385,7 @@ function SurveyQuestionBlock({
   invalid,
   triedNext,
   shakeKey,
+  errorMessage = "Please select an option to continue.",
   children,
 }: {
   groupId: string;
@@ -344,6 +394,7 @@ function SurveyQuestionBlock({
   invalid: boolean;
   triedNext: boolean;
   shakeKey: number;
+  errorMessage?: string;
   children: ReactNode;
 }) {
   const showErr = invalid && triedNext;
@@ -355,7 +406,7 @@ function SurveyQuestionBlock({
         className={cn("rounded-xl", showErr && "border-2 border-red-400 p-3 survey-shake")}
       >
         {children}
-        {showErr ? <p className="text-red-500 text-sm mt-2">Please select an option to continue.</p> : null}
+        {showErr ? <p className="text-red-500 text-sm mt-2">{errorMessage}</p> : null}
       </div>
     </div>
   );
@@ -420,7 +471,8 @@ function VisualOptionCards({
 }
 
 const Questionnaire = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
+  const [privacyConsent, setPrivacyConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -428,6 +480,7 @@ const Questionnaire = () => {
   const [shakeKey, setShakeKey] = useState(0);
   const [form, setForm] = useState<FormData>({
     name: "",
+    email: "",
     age: "",
     gender: "",
     occupationDropdown: "",
@@ -436,23 +489,29 @@ const Questionnaire = () => {
     moods: [],
     moodOther: "",
     travelTypes: [],
+    travelTypesOther: "",
     budget: "",
     consultationRequested: "",
     additionalNotes: "",
     heardOfEmotionTravel: "",
     expectedFeatures: [],
+    expectedFeaturesOther: "",
     destinationTypes: [],
+    destinationTypesOther: "",
     destinationScope: "",
     activities: [],
+    activitiesOther: "",
     travelDistance: "",
     travelWith: [],
+    travelWithOther: "",
     openToNew: "",
     transport: [],
+    transportOther: "",
     tripLength: "",
     destinationVibe: "",
   });
 
-  const progressPercent = (step / totalSteps) * 100;
+  const progressPercent = step === 0 ? 0 : (step / totalSteps) * 100;
   const percentLabel = `${Math.round(progressPercent)}% complete`;
   const invalidGroups = getInvalidSurveyGroups(step, form);
 
@@ -477,16 +536,26 @@ const Questionnaire = () => {
       const occOk =
         form.occupationDropdown === "" ||
         (form.occupationDropdown !== "Other" || form.occupationOther.trim() !== "");
-      return form.name.trim() !== "" && form.age !== "" && form.gender !== "" && occOk && form.heardOfEmotionTravel !== "";
+      return (
+        form.name.trim() !== "" &&
+        isValidEmail(form.email) &&
+        form.age !== "" &&
+        form.gender !== "" &&
+        occOk &&
+        form.heardOfEmotionTravel !== ""
+      );
     }
     if (step === 2) {
       return (
         form.travelTypes.length > 0 &&
+        (!form.travelTypes.includes("Other") || form.travelTypesOther.trim() !== "") &&
         form.expectedFeatures.length > 0 &&
+        (!form.expectedFeatures.includes("Other") || form.expectedFeaturesOther.trim() !== "") &&
         form.openToNew !== "" &&
         form.destinationVibe !== "" &&
         form.travelFrequency !== "" &&
-        form.moods.length > 0
+        form.moods.length > 0 &&
+        (!form.moods.includes("Other") || form.moodOther.trim() !== "")
       );
     }
     if (step === 3) {
@@ -495,14 +564,18 @@ const Questionnaire = () => {
         form.travelDistance !== "" &&
         form.tripLength !== "" &&
         form.travelWith.length > 0 &&
-        form.transport.length > 0
+        (!form.travelWith.includes("Other") || form.travelWithOther.trim() !== "") &&
+        form.transport.length > 0 &&
+        (!form.transport.includes("Other") || form.transportOther.trim() !== "")
       );
     }
     if (step === 4) {
       return (
         form.destinationTypes.length > 0 &&
+        (!form.destinationTypes.includes("Other") || form.destinationTypesOther.trim() !== "") &&
         form.destinationScope !== "" &&
         form.activities.length > 0 &&
+        (!form.activities.includes("Other") || form.activitiesOther.trim() !== "") &&
         (form.consultationRequested === "yes" || form.consultationRequested === "no")
       );
     }
@@ -511,6 +584,7 @@ const Questionnaire = () => {
 
   const buildPayload = () => ({
     name: form.name,
+    email: form.email.trim(),
     age: form.age,
     gender: form.gender,
     occupation: occupationForPayload(),
@@ -518,6 +592,7 @@ const Questionnaire = () => {
     moods: form.moods,
     moodOther: form.moodOther,
     travelTypes: form.travelTypes,
+    travelTypesOther: form.travelTypesOther.trim(),
     budget: form.budget,
     consultationRequested:
       form.consultationRequested === "yes" || form.consultationRequested === "no"
@@ -526,13 +601,18 @@ const Questionnaire = () => {
     additionalNotes: form.additionalNotes,
     heardOfEmotionTravel: form.heardOfEmotionTravel,
     expectedFeatures: form.expectedFeatures,
+    expectedFeaturesOther: form.expectedFeaturesOther.trim(),
     destinationTypes: form.destinationTypes,
+    destinationTypesOther: form.destinationTypesOther.trim(),
     destinationScope: form.destinationScope ? [form.destinationScope] : [],
     activities: form.activities,
+    activitiesOther: form.activitiesOther.trim(),
     travelDistance: form.travelDistance,
     travelWith: form.travelWith,
+    travelWithOther: form.travelWithOther.trim(),
     openToNew: form.openToNew,
     transport: form.transport,
+    transportOther: form.transportOther.trim(),
     tripLength: form.tripLength,
     destinationVibe: form.destinationVibe,
   });
@@ -600,7 +680,7 @@ const Questionnaire = () => {
       <div className="container mx-auto max-w-2xl px-4 py-12">
         <h1 className="font-heading text-3xl md:text-4xl font-bold text-center mb-2">Emotion Travel Survey</h1>
         <p className="text-center text-muted-foreground mb-2">
-          Step {step} of {totalSteps}
+          {step === 0 ? "Privacy notice" : `Step ${step} of ${totalSteps}`}
         </p>
         <div className="mb-8">
           <Progress value={progressPercent} className="mb-2 h-2" />
@@ -612,6 +692,68 @@ const Questionnaire = () => {
         )}
 
         <div className="bg-card flex min-h-[300px] flex-col rounded-2xl border border-border p-6 shadow-md md:p-8">
+          {/* Step 0 — Privacy notice */}
+          {step === 0 && (
+            <div className="flex flex-1 flex-col gap-5 text-sm leading-relaxed text-foreground">
+              <h2 className="font-heading text-xl font-semibold text-foreground">Your Privacy Matters to Us</h2>
+              <div className="max-h-[min(55vh,520px)] space-y-4 overflow-y-auto pr-1 text-muted-foreground">
+                <p>
+                  Before you begin, SurpreSaFeel Travels would like to inform you that the personal and emotional
+                  information you share through this questionnaire is collected solely for the purpose of crafting your
+                  personalized travel itinerary. This includes your name, contact details, travel preferences, budget
+                  range, and emotional assessment responses.
+                </p>
+                <p>
+                  In compliance with the Republic Act No. 10173, also known as the Data Privacy Act of 2012 of the
+                  Philippines, we are committed to collecting only the information necessary to deliver our service,
+                  storing your data securely and limiting access strictly to authorized members of our team, using your
+                  information exclusively for travel planning purposes and never selling or sharing it with third parties
+                  without your explicit consent, and retaining your data only for as long as it is needed to complete and
+                  fulfill your requested itinerary.
+                </p>
+                <p>
+                  By clicking &quot;I Agree and Continue&quot;, you acknowledge that you have read and understood this
+                  notice and you voluntarily consent to the collection and processing of your personal information by
+                  SurpreSaFeel Travels for the purpose stated above.
+                </p>
+                <p>
+                  If you have any questions or concerns regarding your data, you may reach us at{" "}
+                  <a
+                    href="mailto:SurpreSaFeelTravels@gmail.com"
+                    className="font-medium text-primary underline-offset-2 hover:underline"
+                  >
+                    SurpreSaFeelTravels@gmail.com
+                  </a>
+                  .
+                </p>
+                <p className="font-medium text-foreground">SurpreSaFeel Travels — Where Emotion Leads, We Follow.</p>
+              </div>
+              <div
+                key={triedNext && !privacyConsent ? `privacy-${shakeKey}` : "privacy"}
+                className={cn(
+                  "rounded-xl border border-border bg-muted/30 p-4",
+                  triedNext && !privacyConsent && "survey-shake border-red-400",
+                )}
+              >
+                <div className="flex gap-3">
+                  <Checkbox
+                    id="privacy-consent"
+                    checked={privacyConsent}
+                    onCheckedChange={(c) => setPrivacyConsent(c === true)}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor="privacy-consent" className="cursor-pointer text-sm leading-snug text-foreground">
+                    I have read the notice above and voluntarily consent to the collection and processing of my personal
+                    information as described. *
+                  </label>
+                </div>
+                {triedNext && !privacyConsent ? (
+                  <p className="mt-2 text-sm text-red-500">Please check the box to continue.</p>
+                ) : null}
+              </div>
+            </div>
+          )}
+
           {/* Step 1 — About You */}
           {step === 1 && (
             <div className="flex flex-1 flex-col gap-4">
@@ -631,6 +773,25 @@ const Questionnaire = () => {
                   onChange={(e) => updateText("name", e.target.value)}
                   className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="Your full name"
+                />
+              </SurveyQuestionBlock>
+              <SurveyQuestionBlock
+                groupId="email"
+                sectionLabel="Email"
+                showDivider
+                invalid={invalidGroups.has("email")}
+                triedNext={triedNext}
+                shakeKey={shakeKey}
+                errorMessage="Please enter a valid email address."
+              >
+                <label className="mb-1 block text-sm font-medium">Email *</label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => updateText("email", e.target.value)}
+                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="you@example.com"
+                  autoComplete="email"
                 />
               </SurveyQuestionBlock>
               <SurveyQuestionBlock
@@ -737,6 +898,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("travelTypes")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">What type of travel do you usually prefer?</h3>
                 <p className="mb-3 text-sm text-muted-foreground">Check all that apply</p>
@@ -745,9 +907,32 @@ const Questionnaire = () => {
                   iconMap={travelTypeIcons}
                   mode="multi"
                   selected={form.travelTypes}
-                  onToggle={(v) => toggleArray("travelTypes", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.travelTypes;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        travelTypes: next,
+                        ...(v === "Other" && on ? { travelTypesOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-1 sm:grid-cols-2"
                 />
+                {form.travelTypes.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.travelTypesOther}
+                      onChange={(e) => updateText("travelTypesOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="Describe your travel style"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
               <SurveyQuestionBlock
                 groupId="expectedFeatures"
@@ -756,6 +941,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("expectedFeatures")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">
                   What features would you expect from an emotion-based travel service?
@@ -766,9 +952,32 @@ const Questionnaire = () => {
                   iconMap={featureIcons}
                   mode="multi"
                   selected={form.expectedFeatures}
-                  onToggle={(v) => toggleArray("expectedFeatures", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.expectedFeatures;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        expectedFeatures: next,
+                        ...(v === "Other" && on ? { expectedFeaturesOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-1 sm:grid-cols-2"
                 />
+                {form.expectedFeatures.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.expectedFeaturesOther}
+                      onChange={(e) => updateText("expectedFeaturesOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="Describe other features you expect"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
               <SurveyQuestionBlock
                 groupId="openToNew"
@@ -833,6 +1042,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("moods")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">What is your mood/feeling/emotions?</h3>
                 <p className="mb-3 text-sm text-muted-foreground">Check all that apply</p>
@@ -841,19 +1051,32 @@ const Questionnaire = () => {
                   iconMap={moodIcons}
                   mode="multi"
                   selected={form.moods}
-                  onToggle={(v) => toggleArray("moods", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.moods;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        moods: next,
+                        ...(v === "Other" && on ? { moodOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
                 />
-                <div className="mt-3">
-                  <label className="mb-1 block text-sm font-medium">Others (please specify)</label>
-                  <input
-                    type="text"
-                    value={form.moodOther}
-                    onChange={(e) => updateText("moodOther", e.target.value)}
-                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="Others (please specify)"
-                  />
-                </div>
+                {form.moods.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.moodOther}
+                      onChange={(e) => updateText("moodOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="Describe your mood or feeling"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
             </div>
           )}
@@ -923,6 +1146,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("travelWith")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">Who do you usually travel with?</h3>
                 <p className="mb-3 text-sm text-muted-foreground">Check all that apply</p>
@@ -931,9 +1155,32 @@ const Questionnaire = () => {
                   iconMap={travelWithIcons}
                   mode="multi"
                   selected={form.travelWith}
-                  onToggle={(v) => toggleArray("travelWith", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.travelWith;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        travelWith: next,
+                        ...(v === "Other" && on ? { travelWithOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-1 sm:grid-cols-2"
                 />
+                {form.travelWith.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.travelWithOther}
+                      onChange={(e) => updateText("travelWithOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="e.g. colleagues, tour group"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
               <SurveyQuestionBlock
                 groupId="transport"
@@ -942,6 +1189,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("transport")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">What type of transportation do you prefer?</h3>
                 <p className="mb-3 text-sm text-muted-foreground">Check all that apply</p>
@@ -950,9 +1198,32 @@ const Questionnaire = () => {
                   iconMap={transportIcons}
                   mode="multi"
                   selected={form.transport}
-                  onToggle={(v) => toggleArray("transport", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.transport;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        transport: next,
+                        ...(v === "Other" && on ? { transportOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-1 sm:grid-cols-2"
                 />
+                {form.transport.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.transportOther}
+                      onChange={(e) => updateText("transportOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="e.g. train, motorcycle"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
             </div>
           )}
@@ -968,6 +1239,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("destinationTypes")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">
                   What type of destinations are you most interested in?
@@ -978,9 +1250,32 @@ const Questionnaire = () => {
                   iconMap={destinationTypeIcons}
                   mode="multi"
                   selected={form.destinationTypes}
-                  onToggle={(v) => toggleArray("destinationTypes", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.destinationTypes;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        destinationTypes: next,
+                        ...(v === "Other" && on ? { destinationTypesOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-1 sm:grid-cols-2"
                 />
+                {form.destinationTypes.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.destinationTypesOther}
+                      onChange={(e) => updateText("destinationTypesOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="Describe destination types you prefer"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
               <SurveyQuestionBlock
                 groupId="destinationScope"
@@ -1007,6 +1302,7 @@ const Questionnaire = () => {
                 invalid={invalidGroups.has("activities")}
                 triedNext={triedNext}
                 shakeKey={shakeKey}
+                errorMessage="Select at least one option. If you chose Other, add a short description."
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold">
                   What activities do you want included in your trip?
@@ -1017,9 +1313,32 @@ const Questionnaire = () => {
                   iconMap={activityIcons}
                   mode="multi"
                   selected={form.activities}
-                  onToggle={(v) => toggleArray("activities", v)}
+                  onToggle={(v) => {
+                    setForm((prev) => {
+                      const arr = prev.activities;
+                      const on = arr.includes(v);
+                      const next = on ? arr.filter((x) => x !== v) : [...arr, v];
+                      return {
+                        ...prev,
+                        activities: next,
+                        ...(v === "Other" && on ? { activitiesOther: "" } : {}),
+                      };
+                    });
+                  }}
                   columnsClass="grid-cols-1 sm:grid-cols-2"
                 />
+                {form.activities.includes("Other") ? (
+                  <div className="mt-3">
+                    <label className="mb-1 block text-sm font-medium">Please specify (Other) *</label>
+                    <input
+                      type="text"
+                      value={form.activitiesOther}
+                      onChange={(e) => updateText("activitiesOther", e.target.value)}
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="Describe activities you want included"
+                    />
+                  </div>
+                ) : null}
               </SurveyQuestionBlock>
               <SurveyQuestionBlock
                 groupId="consultation"
@@ -1038,6 +1357,7 @@ const Questionnaire = () => {
                   {consultationCardOptions.map((opt) => {
                     const isOn = form.consultationRequested === opt.value;
                     const isYes = opt.value === "yes";
+                    const LeadIcon = opt.LeadIcon;
                     return (
                       <button
                         key={opt.value}
@@ -1060,9 +1380,14 @@ const Questionnaire = () => {
                             aria-hidden
                           />
                         ) : null}
-                        <span className="shrink-0 text-lg leading-none" aria-hidden>
-                          {isYes ? "✅" : "➡️"}
-                        </span>
+                        <LeadIcon
+                          className={cn(
+                            "h-6 w-6 shrink-0",
+                            isYes ? "text-amber-800" : "text-muted-foreground",
+                          )}
+                          strokeWidth={1.75}
+                          aria-hidden
+                        />
                         <span
                           className={cn(
                             "pr-6 text-sm font-medium leading-snug",
@@ -1102,16 +1427,16 @@ const Questionnaire = () => {
           <div className="mt-6 flex flex-shrink-0 items-center justify-between gap-4 border-t border-gray-100 pt-6">
             <button
               type="button"
-              disabled={step <= 1}
+              disabled={step <= 0}
               onClick={() => {
-                if (step <= 1) return;
+                if (step <= 0) return;
                 setTriedNext(false);
                 setStep((s) => s - 1);
               }}
               className={cn(
                 "rounded-full border border-gray-300 bg-transparent px-8 py-3 font-medium text-gray-500 transition-colors",
-                step <= 1 && "opacity-40",
-                step > 1 && "hover:bg-gray-50",
+                step <= 0 && "opacity-40",
+                step > 0 && "hover:bg-gray-50",
               )}
             >
               Back
@@ -1120,6 +1445,16 @@ const Questionnaire = () => {
               <button
                 type="button"
                 onClick={() => {
+                  if (step === 0) {
+                    if (!privacyConsent) {
+                      setTriedNext(true);
+                      setShakeKey((k) => k + 1);
+                      return;
+                    }
+                    setTriedNext(false);
+                    setStep(1);
+                    return;
+                  }
                   if (!canNext()) {
                     setTriedNext(true);
                     setShakeKey((k) => k + 1);
@@ -1130,7 +1465,7 @@ const Questionnaire = () => {
                 }}
                 className="rounded-full bg-amber-400 px-8 py-3 font-medium text-white transition-opacity hover:bg-amber-500"
               >
-                Next
+                {step === 0 ? "I Agree and Continue" : "Next"}
               </button>
             ) : (
               <button
