@@ -10,6 +10,12 @@ import {
   Waves,
   type LucideIcon,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const trips: { icon: LucideIcon; name: string; mood: string; location: string }[] = [
   { icon: Sunrise, name: "Tagaytay Escape", mood: "Stress Relief", location: "Tagaytay, Batangas" },
@@ -24,6 +30,33 @@ const steps = [
   { icon: Heart, title: "Tell Us How You Feel", desc: "You answer a short emotional assessment" },
   { icon: Map, title: "We Plan Your Journey", desc: "Our team builds a personalized itinerary" },
   { icon: Compass, title: "You Travel Your Way", desc: "Experience a trip designed around your emotions" },
+];
+
+const faqItems: { q: string; a: string }[] = [
+  {
+    q: "What is emotion-based travel planning?",
+    a: "Instead of starting with a destination list, we start with how you want to feel—rested, reconnected, brave, or something else—and shape pacing, places, and activities around that emotional goal.",
+  },
+  {
+    q: "How much does a personalized itinerary cost?",
+    a: "Sample itineraries on this site are inspiration only. Your custom plan is built after the Emotion Quiz; pricing starts at ₱1,000 for a personalized itinerary—details are confirmed when we review your answers.",
+  },
+  {
+    q: "Who is SurpreSaFeel for?",
+    a: "We work especially with Filipino travelers (millennials and Gen Z) who want trips that match their mood and bandwidth—not a one-size-fits-all template.",
+  },
+  {
+    q: "Do I have to take the Emotion Quiz?",
+    a: "The quiz helps us capture how you want to feel and your travel style in one pass. If you prefer email instead, reach out via our Contact page and we will guide you from there.",
+  },
+  {
+    q: "How long does it take to get my itinerary?",
+    a: "Turnaround depends on trip complexity and how complete your inputs are. After you submit the questionnaire, our team reviews it and follows up with next steps and timing.",
+  },
+  {
+    q: "Where are you based?",
+    a: "SurpreSaFeel Travels is a digital-first travel planning service based in the Philippines. We plan remotely and coordinate with you online.",
+  },
 ];
 
 const Index = () => {
@@ -105,6 +138,39 @@ const Index = () => {
           <Link to="/questionnaire" className="inline-block px-8 py-3 rounded-full bg-white text-foreground font-semibold shadow-lg hover:opacity-90 transition-opacity">
             Start Your Emotion Quiz
           </Link>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-20 px-4 border-t border-border/60 bg-muted/25">
+        <div className="container mx-auto max-w-2xl">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-center mb-4">Frequently Asked Questions</h2>
+          <p className="text-center text-muted-foreground mb-10 text-sm md:text-base">
+            Quick answers about how SurpreSaFeel plans trips around how you want to feel.
+          </p>
+          <Accordion type="single" collapsible className="w-full">
+            {faqItems.map((item, i) => (
+              <AccordionItem key={i} value={`item-${i}`} className="border-border/80">
+                <AccordionTrigger className="text-left font-heading text-base md:text-lg hover:no-underline py-5">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed text-[0.95rem]">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            Still unsure?{" "}
+            <Link to="/contact" className="font-medium text-primary underline-offset-2 hover:underline">
+              Contact us
+            </Link>{" "}
+            or{" "}
+            <Link to="/questionnaire" className="font-medium text-primary underline-offset-2 hover:underline">
+              take the Emotion Quiz
+            </Link>
+            .
+          </p>
         </div>
       </section>
     </div>
