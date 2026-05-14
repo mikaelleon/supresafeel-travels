@@ -10,7 +10,8 @@
  * 4. Run setupSheetHeaders() once from the editor (optional but recommended),
  *    or let the first POST create headers if row 1 is empty.
  *
- * The React app POSTs JSON matching Questionnaire.tsx FormData + consultationRequested.
+ * The React app POSTs JSON with camelCase keys (see Questionnaire.tsx buildPayload).
+ * Row 1 headers use the same wording as the survey questions so the sheet stays readable.
  * Body: JSON in postData.contents, or CORS-safe form field payload (urlencoded) from the website.
  */
 
@@ -20,36 +21,36 @@ const SPREADSHEET_ID = "1N7b8rl8t_P3ogEbFJzf5oA1-tInA_yuoor7FO1ZENW8";
 const SHEET_NAME = "Responses";
 
 const HEADER_ROW = [
-  "timestamp",
-  "name",
-  "email",
-  "age",
-  "gender",
-  "occupation",
-  "travelFrequency",
-  "moods",
-  "moodOther",
-  "travelTypes",
-  "travelTypesOther",
-  "budget",
-  "consultationRequested",
-  "additionalNotes",
-  "heardOfEmotionTravel",
-  "expectedFeatures",
-  "expectedFeaturesOther",
-  "destinationTypes",
-  "destinationTypesOther",
-  "destinationScope",
-  "activities",
-  "activitiesOther",
-  "travelDistance",
-  "travelWith",
-  "travelWithOther",
-  "openToNew",
-  "transport",
-  "transportOther",
-  "tripLength",
-  "destinationVibe",
+  "Submitted at",
+  "What is your name?",
+  "What is your email address?",
+  "What is your age range?",
+  "What is your gender?",
+  "What is your occupation?",
+  "How often do you travel?",
+  "What is your mood, feeling, or emotions? (Check all that apply)",
+  "What is your mood, feeling, or emotions? — If you selected Other, please specify",
+  "What type of travel do you usually prefer? (Check all that apply)",
+  "What type of travel do you usually prefer? — If you selected Other, please specify",
+  "What is your travel budget?",
+  "Would you like to include a consultation?",
+  "Anything else you would like us to know? (optional)",
+  "Have you ever heard of emotion-based travel planning?",
+  "What features would you expect from an emotion-based travel service? (Check all that apply)",
+  "What features would you expect from an emotion-based travel service? — If you selected Other, please specify",
+  "What type of destinations are you most interested in? (Check all that apply)",
+  "What type of destinations are you most interested in? — If you selected Other, please specify",
+  "Which destinations do you prefer?",
+  "What activities do you want included in your trip? (Check all that apply)",
+  "What activities do you want included in your trip? — If you selected Other, please specify",
+  "How far are you willing to travel?",
+  "Who do you usually travel with? (Check all that apply)",
+  "Who do you usually travel with? — If you selected Other, please specify",
+  "Are you open to trying new or less popular destinations?",
+  "What type of transportation do you prefer? (Check all that apply)",
+  "What type of transportation do you prefer? — If you selected Other, please specify",
+  "How long do you prefer your trips?",
+  "Would you prefer a destination that is:",
 ];
 
 function getTargetSheet_() {
