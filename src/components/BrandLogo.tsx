@@ -10,11 +10,11 @@ interface BrandLogoProps {
 }
 
 /**
- * Site wordmark from public/WM1.png (served at /WM1.png).
+ * Site logo from public/WMOG.png (served at /WMOG.png).
  */
 const BrandLogo = ({ variant = "navbar", className = "" }: BrandLogoProps) => (
   <img
-    src="/WM1.png"
+    src="/WMOG.png"
     alt="SurpreSaFeel Travels"
     className={`object-contain object-left ${VARIANT_CLASSES[variant]} ${className}`.trim()}
     decoding="async"
