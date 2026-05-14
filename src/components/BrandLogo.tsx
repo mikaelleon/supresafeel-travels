@@ -1,7 +1,7 @@
 const VARIANT_CLASSES = {
-  navbar: "h-8 sm:h-10 w-auto max-w-[min(100%,240px)]",
-  footer: "h-10 sm:h-11 w-auto max-w-[min(100%,280px)]",
-  compact: "h-8 w-auto max-w-[200px] mx-auto",
+  navbar: "h-10 sm:h-12 w-auto max-w-[min(100%,300px)]",
+  footer: "h-12 sm:h-14 w-auto max-w-[min(100%,340px)]",
+  compact: "h-12 sm:h-14 w-auto max-w-[min(100%,320px)] mx-auto",
 } as const;
 
 interface BrandLogoProps {

@@ -11,7 +11,7 @@
  *    or let the first POST create headers if row 1 is empty.
  *
  * The React app POSTs JSON with camelCase keys (see Questionnaire.tsx buildPayload).
- * Row 1 headers use the same wording as the survey questions so the sheet stays readable.
+ * Row 1 headers: survey questions for most columns; first five demographics use short labels (Name, Email, etc.).
  * Body: JSON in postData.contents, or CORS-safe form field payload (urlencoded) from the website.
  */
 
@@ -22,11 +22,11 @@ const SHEET_NAME = "Responses";
 
 const HEADER_ROW = [
   "Submitted at",
-  "What is your name?",
-  "What is your email address?",
-  "What is your age range?",
-  "What is your gender?",
-  "What is your occupation?",
+  "Name",
+  "Email",
+  "Age range",
+  "Gender",
+  "Occupation",
   "How often do you travel?",
   "What is your mood, feeling, or emotions? (Check all that apply)",
   "What is your mood, feeling, or emotions? — If you selected Other, please specify",
